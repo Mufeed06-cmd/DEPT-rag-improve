@@ -1,0 +1,1554 @@
+[
+  {
+    "name": "Dr. Narayana Rao Appini",
+    "designation": "Head of the Department",
+    "Qualification": "B.E., M.Tech., Ph.D",
+    "date_of_joining": "2018-11-27",
+    "phone": "9441057392 / 8297265199",
+    "email": "narayanaraoappini@gmail.com, narayanaraoappini@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "AI LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "BD and DV LAB",
+          "class": "III-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "11:00-12:00",
+          "subject": "AI",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "AI LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "9:00-12:00",
+          "subject": "FULL STACK DEVELOPMENT LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "11:00-12:00",
+          "subject": "AI",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "TPW.IPR",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "TPW.IPR",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "11:00-12:00",
+          "subject": "AI",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ]
+    }
+  },
+  {
+    "name": "M. Nataraja Suresh",
+    "designation": "Professor",
+    "Qualification": "B.Tech., M.Tech., Ph.D",
+    "date_of_joining": "2010-07-22",
+    "phone": "9246423635",
+    "email": "mns9@yahoo.com, mns9@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "11:00-12:00",
+          "subject": "SNA",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "CNS LAB",
+          "class": "III-II IT",
+          "type": "lab"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "SNA",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "IDS LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "SNA",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "IDS LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "SNA",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "SNA",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "SNA",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "SNA",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "SNA",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ]
+    }
+  },
+  {
+    "name": "Dr. V. Veera Raghavulu",
+    "designation": "Associate Professor",
+    "Qualification": "B.Tech., M.Tech., Ph.D",
+    "date_of_joining": "2009-07-02",
+    "phone": "9440836909",
+    "email": "veera_raghavulu@rediff.com, veera_raghavulu@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "DL LAB",
+          "class": "III-II AI_DS-A",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "CNS LAB",
+          "class": "III-II IT",
+          "type": "lab"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "DTI LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "CNS",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "CNS",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "CNS",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "CNS",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "TPW.IPR",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "TPW.IPR",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-4:00",
+          "subject": "WORKSHOP",
+          "class": "III-II IT",
+          "type": "lab"
+        }
+      ]
+    }
+  },
+  {
+    "name": "T.V. Mahendra",
+    "designation": "Associate Professor",
+    "Qualification": "B.Tech., M.Tech., Ph.D",
+    "date_of_joining": "2014-06-30",
+    "phone": "9848715781",
+    "email": "mahendraniyogi@gmail.com, mahendrasharma@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "DTI LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "AIF",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "DTI LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "AIF",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "AIF",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "DL LAB",
+          "class": "III-II AI_DS-B",
+          "type": "lab"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "AIF",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "11:00-12:00",
+          "subject": "AIF",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "AIF",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "AIF",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "AIF",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ]
+    }
+  },
+  {
+    "name": "Dr. S. Mamatha",
+    "designation": "Assistant Professor",
+    "Qualification": "B.Tech., M.Tech., Ph.D",
+    "date_of_joining": "2014-07-09",
+    "phone": "9573800895",
+    "email": "mamatha.sekireddy@gmail.com, mamatha45@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "PROJECT",
+          "class": "IV-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "IDS",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "IDS",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "IDS LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "IDS LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "IDS",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "FULL STACK DEVELOPMENT LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "IDS",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "11:00-12:00",
+          "subject": "IDS",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "IDS",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        }
+      ]
+    }
+  },
+  {
+    "name": "B. Kalyani",
+    "designation": "Assistant Professor",
+    "Qualification": "B.Tech., M.Tech.",
+    "date_of_joining": "2006-06-21",
+    "phone": "8500161110",
+    "email": "kalyanibondub5@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "SPM",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "AI LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "11:00-12:00",
+          "subject": "SPM",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "DL_CO",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "ML LAB",
+          "class": "III-II IT",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "SPM",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "SPM",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "11:00-12:00",
+          "subject": "DL_CO",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "FULL STACK DEVELOPMENT LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "DL_CO",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "10:00-12:00",
+          "subject": "WORKSHOP",
+          "class": "III-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "DL_CO",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        }
+      ]
+    }
+  },
+  {
+    "name": "M. Sivapratap Reddy",
+    "designation": "Assistant Professor",
+    "Qualification": "B.Tech., M.Tech., [Ph.D]",
+    "date_of_joining": "2010-07-27",
+    "phone": "9490283780",
+    "email": "siva_reddy93@yahoo.com, siva_reddy93@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "11:00-12:00",
+          "subject": "AI",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "AI LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "DTI LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "AI",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "AI LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "9:00-12:00",
+          "subject": "FULL STACK DEVELOPMENT LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "TPW.IPR",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "AI",
+          "class": "II-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "TPW.IPR",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ]
+    }
+  },
+  {
+    "name": "S.V. Chiranjeevi",
+    "designation": "Assistant Professor",
+    "Qualification": "B.Tech., M.Tech., [Ph.D]",
+    "date_of_joining": "2021-11-17",
+    "phone": "9491240473 / 9182272833",
+    "email": "chiranjeevisv@gmail.com, chiranjeevisv@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "DTI LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "DL_CO",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "ML",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "BD and DV LAB",
+          "class": "III-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "ML LAB",
+          "class": "III-II IT",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "ML",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "ML",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "FULL STACK DEVELOPMENT LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "DL_CO",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "ML",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "DL_CO",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "DL_CO",
+          "class": "II-II AI_DS-A",
+          "type": "theory"
+        }
+      ]
+    }
+  },
+  {
+    "name": "P. Penchala Prasanth",
+    "designation": "Assistant Professor",
+    "Qualification": "B.Tech., M.Tech., [Ph.D]",
+    "date_of_joining": "2021-11-01",
+    "phone": "9392320320 / 6281884050",
+    "email": "prasanthsvcn@gmail.com, prasanth_p@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "PROJECT",
+          "class": "IV-II IT",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "BDA",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "BD and DV LAB",
+          "class": "III-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "BD and DV LAB",
+          "class": "III-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "BDA",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "11:00-12:00",
+          "subject": "BDA",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "DL LAB",
+          "class": "III-II AI_DS-B",
+          "type": "lab"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "BDA",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "11:00-12:00",
+          "subject": "BDA",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "BDA",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "BDA",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ]
+    }
+  },
+  {
+    "name": "A. Venkateswarlu",
+    "designation": "Assistant Professor",
+    "Qualification": "B.Tech., M.Tech., [Ph.D]",
+    "date_of_joining": "2023-03-23",
+    "phone": "8340932859",
+    "email": "venkatesh@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "PROJECT",
+          "class": "IV-II AI_DS-A",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "NLP",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "NLP",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "BD and DV LAB",
+          "class": "III-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "NLP",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "11:00-12:00",
+          "subject": "NLP",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "AI LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "NLP",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "NLP",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "NLP",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "11:00-12:00",
+          "subject": "NLP",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "Tutorial",
+          "class": "I-II AI_DS-A",
+          "type": "tutorial"
+        }
+      ]
+    }
+  },
+  {
+    "name": "P. Chandrakala",
+    "designation": "Assistant Professor",
+    "Qualification": "B.Tech., M.Tech., [Ph.D]",
+    "date_of_joining": "2022-07-29",
+    "phone": "8332060958",
+    "email": "chandrakala@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "DL",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "11:00-12:00",
+          "subject": "CS_",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "DL",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "BD and DV LAB",
+          "class": "III-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "DL",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "CS_",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "IDS LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "DL LAB",
+          "class": "III-II AI_DS-B",
+          "type": "lab"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "CS_",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "DL",
+          "class": "III-II AI_DS-B",
+          "type": "theory"
+        },
+        {
+          "time": "11:00-12:00",
+          "subject": "CS_",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "FULL STACK DEVELOPMENT LAB",
+          "class": "II-II AI_DS-B",
+          "type": "lab"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ]
+    }
+  },
+  {
+    "name": "M. Sujana",
+    "designation": "Assistant Professor",
+    "Qualification": "B.Tech., M.Tech., Ph.D",
+    "date_of_joining": "2018-07-02",
+    "phone": "7095793174",
+    "email": "sujanam1247@gmail.com, sujanam1247@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "9:00-10:00",
+          "subject": "CdC",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "CdC",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "11:00-12:00",
+          "subject": "CdC",
+          "class": "III-II IT",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "T",
+          "class": "I-II AI_DS-D",
+          "type": "theory"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "T",
+          "class": "I-II AI_DS-D",
+          "type": "theory"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "CdC",
+          "class": "III-II IT",
+          "type": "theory"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-2:00",
+          "subject": "T",
+          "class": "I-II AI_DS-C",
+          "type": "theory"
+        },
+        {
+          "time": "2:00-3:00",
+          "subject": "T",
+          "class": "I-II AI_DS-C",
+          "type": "theory"
+        }
+      ]
+    }
+  },
+  {
+    "name": "P. Jyothi",
+    "designation": "Assistant Professor",
+    "Qualification": "B.Tech., M.Tech.",
+    "date_of_joining": "2022-09-01",
+    "phone": "9440767402 / 8297881509",
+    "email": "pittijyothi91@gmail.com, pjyothi91@nbkrist.org",
+    "timetable": {
+      "Monday": [
+        {
+          "time": "9:00-11:00",
+          "subject": "DL LAB",
+          "class": "III-II AI_DS-A",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "DL",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Tuesday": [
+        {
+          "time": "11:00-12:00",
+          "subject": "DL",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "1:00-3:00",
+          "subject": "IDS LAB",
+          "class": "II-II AI_DS-A",
+          "type": "lab"
+        }
+      ],
+      "Wednesday": [
+        {
+          "time": "10:00-11:00",
+          "subject": "DL",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "3:00-4:00",
+          "subject": "DL",
+          "class": "III-II AI_DS-A",
+          "type": "theory"
+        }
+      ],
+      "Thursday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Friday": [
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        }
+      ],
+      "Saturday": [
+        {
+          "time": "9:00-12:00",
+          "subject": "WORKSHOP",
+          "class": "III-II AI_DS-A",
+          "type": "lab"
+        },
+        {
+          "time": "12:00-1:00",
+          "subject": "LUNCH",
+          "class": null,
+          "type": "break"
+        },
+        {
+          "time": "2:00-4:00",
+          "subject": "Tutorial",
+          "class": "I-II AI_DS-B",
+          "type": "tutorial"
+        }
+      ]
+    }
+  }
+]

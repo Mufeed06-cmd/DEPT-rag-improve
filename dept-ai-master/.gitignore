@@ -1,0 +1,38 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# ChromaDB vector store (large, regenerated on startup)
+chroma_db/
+
+# Temp files
+temp_files/
+uploads/
+*.tmp
+output.txt
+
+# IDE
+.vscode/
+.idea/
+
+# Environment secrets
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Build helper script (not needed in repo)
+build_faculty.py

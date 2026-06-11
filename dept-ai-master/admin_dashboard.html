@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NBKR Admin Dashboard</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI',sans-serif;background:#0d0d14;color:#e8eaf6;min-height:100vh}
+.top-bar{background:#1a1a2e;border-bottom:1px solid rgba(255,255,255,.07);
+  padding:12px 24px;display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:100;gap:12px;flex-wrap:wrap}
+.top-bar h1{font-size:16px;font-weight:700;background:linear-gradient(90deg,#a78bfa,#818cf8);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;white-space:nowrap}
+.top-bar .right{display:flex;align-items:center;gap:10px}
+#pwdInput{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:7px 12px;color:#e8eaf6;font-size:13px;width:160px}
+#loginBtn{background:#6366f1;color:#fff;border:none;padding:8px 16px;
+  border-radius:8px;cursor:pointer;font-size:13px;font-weight:600}
+#loginBtn:hover{background:#4f46e5}
+#authStatus{font-size:12px;color:#94a3b8}
+a.back-btn{color:#94a3b8;font-size:13px;text-decoration:none;border:1px solid rgba(255,255,255,.1);
+  padding:6px 12px;border-radius:8px}
+a.back-btn:hover{color:#fff;border-color:#6366f1}
+
+.tabs{display:flex;gap:4px;padding:14px 24px 0;border-bottom:1px solid rgba(255,255,255,.06);
+  flex-wrap:wrap;overflow-x:auto}
+.tab{padding:8px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:12.5px;
+  font-weight:500;color:#94a3b8;border:1px solid transparent;border-bottom:none;white-space:nowrap}
+.tab:hover{color:#e8eaf6;background:rgba(255,255,255,.04)}
+.tab.active{color:#a78bfa;background:#1e1e30;border-color:rgba(255,255,255,.08)}
+
+.content{padding:20px 24px;display:none}
+.content.active{display:block}
+
+.section-card{background:#1a1a2e;border:1px solid rgba(255,255,255,.07);
+  border-radius:12px;margin-bottom:18px;overflow:hidden}
+.section-card .ch{padding:12px 16px;background:rgba(255,255,255,.03);
+  border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;
+  justify-content:space-between}
+.section-card .ch h3{font-size:13.5px;font-weight:600;color:#c7d2fe}
+.cb{padding:16px}
+
+.form-row{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:10px}
+.fg{flex:1;min-width:160px}
+.fg label{display:block;font-size:11px;color:#94a3b8;text-transform:uppercase;
+  letter-spacing:.04em;margin-bottom:4px;font-weight:600}
+.fg input,.fg select,.fg textarea{
+  width:100%;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);
+  border-radius:8px;padding:8px 11px;color:#e8eaf6;font-size:13px;font-family:inherit}
+.fg input:focus,.fg select:focus,.fg textarea:focus{
+  outline:none;border-color:#6366f1;background:rgba(99,102,241,.08)}
+.fg select option{background:#1a1a2e}
+.fg textarea{resize:vertical;min-height:70px}
+
+.btn{padding:8px 16px;border-radius:8px;cursor:pointer;font-size:12.5px;
+  font-weight:600;border:none;transition:.15s}
+.btn-add{background:#10b981;color:#fff}.btn-add:hover{background:#059669}
+.btn-del{background:#ef4444;color:#fff}.btn-del:hover{background:#dc2626}
+.btn-save{background:#6366f1;color:#fff}.btn-save:hover{background:#4f46e5}
+.btn-sm{padding:4px 10px;font-size:11.5px}
+
+.data-table{width:100%;border-collapse:collapse;font-size:12.5px}
+.data-table th{background:#0f0f1a;padding:9px 11px;text-align:left;
+  font-size:11px;text-transform:uppercase;letter-spacing:.04em;color:#94a3b8;
+  border-bottom:1px solid rgba(255,255,255,.07)}
+.data-table td{padding:8px 11px;border-bottom:1px solid rgba(255,255,255,.04);color:#c7d2fe;
+  word-break:break-word;max-width:260px}
+.data-table tr:hover td{background:rgba(99,102,241,.05)}
+.del-btn{background:rgba(239,68,68,.15);color:#f87171;border:1px solid rgba(239,68,68,.2);
+  padding:3px 9px;border-radius:6px;cursor:pointer;font-size:11.5px}
+.del-btn:hover{background:rgba(239,68,68,.3)}
+
+#toast{position:fixed;bottom:24px;right:24px;padding:11px 20px;border-radius:10px;
+  font-size:13px;font-weight:600;z-index:999;display:none}
+#toast.ok{background:#10b981;color:#fff}
+#toast.err{background:#ef4444;color:#fff}
+
+.stats-row{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:18px}
+.stat-box{background:#1a1a2e;border:1px solid rgba(255,255,255,.07);border-radius:10px;
+  padding:12px 18px;min-width:100px;text-align:center}
+.stat-box .sv{font-size:24px;font-weight:700;color:#a78bfa}
+.stat-box .sl{font-size:10px;color:#94a3b8;text-transform:uppercase;margin-top:3px}
+
+.badge{display:inline-block;padding:2px 8px;border-radius:8px;font-size:11px;font-weight:600}
+.badge-hod{background:#e8eaf6;color:#1a237e}
+.badge-prof{background:#e8f5e9;color:#1b5e20}
+.badge-assoc{background:#fff3e0;color:#e65100}
+.badge-asst{background:#f3e5f5;color:#4a148c}
+
+.audit-row{padding:9px 14px;border-bottom:1px solid rgba(255,255,255,.04);
+  display:flex;gap:14px;font-size:12px}
+.audit-row .at{color:#6366f1;white-space:nowrap;min-width:170px}
+.audit-row .aa{color:#94a3b8}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <h1>🎓 NBKR Admin Dashboard</h1>
+  <div class="right">
+    <input id="pwdInput" type="password" placeholder="Password…">
+    <button id="loginBtn" onclick="login()">Login</button>
+    <span id="authStatus">Not logged in</span>
+    <a class="back-btn" href="/">← Chatbot</a>
+  </div>
+</div>
+
+<div class="tabs" id="tabsRow" style="display:none">
+  <div class="tab active" onclick="showTab('faculty',this)">👥 Faculty</div>
+  <div class="tab" onclick="showTab('fac-tt',this)">📅 Faculty Timetable</div>
+  <div class="tab" onclick="showTab('class-tt',this)">🏫 Class Timetable</div>
+  <div class="tab" onclick="showTab('notices',this)">📢 Notices</div>
+  <div class="tab" onclick="showTab('curriculum',this)">📖 Curriculum</div>
+  <div class="tab" onclick="showTab('students',this)">🎓 Students</div>
+  <div class="tab" onclick="showTab('knowledge',this)">💡 Knowledge Base</div>
+  <div class="tab" onclick="showTab('audit',this)">🔍 Audit Log</div>
+</div>
+
+<!-- ═══ FACULTY ═══ -->
+<div class="content active" id="tab-faculty">
+  <div class="stats-row" id="facStats"></div>
+  <div class="section-card">
+    <div class="ch"><h3>➕ Add Faculty</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg"><label>Name *</label><input id="fac_name" placeholder="Dr. A. Example"></div>
+        <div class="fg"><label>Designation *</label>
+          <select id="fac_desig"><option>Head of the Department</option><option>Professor</option>
+            <option>Associate Professor</option><option selected>Assistant Professor</option></select></div>
+        <div class="fg"><label>Qualification *</label><input id="fac_qual" placeholder="B.Tech, M.Tech, Ph.D"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>Date of Joining</label><input id="fac_doj" type="date"></div>
+        <div class="fg"><label>Phone *</label><input id="fac_phone" placeholder="9999999999"></div>
+        <div class="fg"><label>Email *</label><input id="fac_email" placeholder="name@nbkrist.org"></div>
+      </div>
+      <button class="btn btn-add" onclick="addFaculty()">➕ Add Faculty</button>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>👥 Faculty List</h3><span id="facCount" style="font-size:11px;color:#94a3b8"></span></div>
+    <div style="overflow-x:auto">
+      <table class="data-table"><thead><tr>
+        <th>#</th><th>Name</th><th>Designation</th><th>Qualification</th><th>Phone</th><th>Email</th><th>DoJ</th><th>Del</th>
+      </tr></thead><tbody id="facTbody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ FACULTY TIMETABLE ═══ -->
+<div class="content" id="tab-fac-tt">
+  <div class="section-card">
+    <div class="ch"><h3>➕ Add Slot to Faculty Timetable</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg"><label>Faculty Name *</label><select id="ftt_name"></select></div>
+        <div class="fg"><label>Day *</label>
+          <select id="ftt_day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+            <option>Thursday</option><option>Friday</option><option>Saturday</option></select></div>
+        <div class="fg"><label>Time *</label><input id="ftt_time" placeholder="9:00-11:00"></div>
+        <div class="fg"><label>Subject *</label><input id="ftt_subj" placeholder="e.g. NLP"></div>
+        <div class="fg"><label>Class</label><input id="ftt_class" placeholder="e.g. III-II AI_DS-A"></div>
+        <div class="fg"><label>Type</label>
+          <select id="ftt_type"><option value="theory">Theory</option><option value="lab">Lab</option>
+            <option value="tutorial">Tutorial</option></select></div>
+      </div>
+      <button class="btn btn-add" onclick="addFacTT()">➕ Add Slot</button>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>🗑️ Delete Faculty Timetable Slot</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg"><label>Faculty</label><select id="del_ftt_name"></select></div>
+        <div class="fg"><label>Day</label>
+          <select id="del_ftt_day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+            <option>Thursday</option><option>Friday</option><option>Saturday</option></select></div>
+        <div class="fg"><label>Subject (partial)</label><input id="del_ftt_subj" placeholder="e.g. NLP"></div>
+        <div class="fg" style="display:flex;align-items:flex-end">
+          <button class="btn btn-del" onclick="delFacTT()">🗑️ Delete Slot</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>📅 Faculty Timetable Viewer</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg" style="max-width:260px"><label>Select Faculty</label><select id="view_ftt" onchange="viewFacTT()"></select></div>
+      </div>
+      <div id="fttView" style="overflow-x:auto;margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CLASS TIMETABLE ═══ -->
+<div class="content" id="tab-class-tt">
+  <div class="section-card">
+    <div class="ch"><h3>✏️ Update Class Timetable Slot</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg"><label>Section *</label><select id="ctt_sec"></select></div>
+        <div class="fg"><label>Day *</label>
+          <select id="ctt_day"><option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+            <option>Thursday</option><option>Friday</option><option>Saturday</option></select></div>
+        <div class="fg"><label>Time Slot *</label><input id="ctt_slot" placeholder="e.g. 9-10 or 9-12"></div>
+        <div class="fg"><label>Value (blank to delete)</label><input id="ctt_val" placeholder="e.g. NLP (VVR)"></div>
+      </div>
+      <button class="btn btn-save" onclick="updateClassTT()">💾 Update Slot</button>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>🏫 Section Timetable Viewer</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg" style="max-width:260px"><label>Select Section</label><select id="view_ctt" onchange="viewClassTT()"></select></div>
+      </div>
+      <div id="cttView" style="overflow-x:auto;margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ NOTICES ═══ -->
+<div class="content" id="tab-notices">
+  <div class="section-card">
+    <div class="ch"><h3>➕ Add Notice / Circular</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg"><label>Title *</label><input id="ntc_title" placeholder="Notice title"></div>
+        <div class="fg"><label>Date</label><input id="ntc_date" type="date"></div>
+        <div class="fg"><label>Category</label>
+          <select id="ntc_cat"><option>general</option><option>fee</option><option>exam</option>
+            <option>circular</option><option>event</option></select></div>
+        <div class="fg"><label>Applicable To</label><input id="ntc_app" placeholder="e.g. All Students"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg" style="min-width:100%"><label>Content *</label>
+          <textarea id="ntc_content" placeholder="Notice content…" style="min-height:80px"></textarea></div>
+      </div>
+      <button class="btn btn-add" onclick="addNotice()">➕ Add Notice</button>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>📢 Notices List</h3><span id="ntcCount" style="font-size:11px;color:#94a3b8"></span></div>
+    <div style="overflow-x:auto">
+      <table class="data-table"><thead><tr>
+        <th>#</th><th>ID</th><th>Date</th><th>Title</th><th>Category</th><th>Content</th><th>Del</th>
+      </tr></thead><tbody id="ntcTbody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ CURRICULUM ═══ -->
+<div class="content" id="tab-curriculum">
+  <div class="section-card">
+    <div class="ch"><h3>➕ Add Course</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg"><label>Semester *</label><select id="cur_sem"></select></div>
+        <div class="fg"><label>Section</label>
+          <select id="cur_section"><option>Electives</option><option>Skill Courses</option>
+            <option>Non-Electives</option><option>Professional Electives I</option>
+            <option>Professional Electives II</option><option>Professional Electives IV</option>
+            <option>Management Course II</option></select></div>
+        <div class="fg"><label>Course Name *</label><input id="cur_course" placeholder="Machine Learning (23AD31T2)"></div>
+        <div class="fg"><label>Lab (or None)</label><input id="cur_lab" placeholder="ML Lab"></div>
+      </div>
+      <button class="btn btn-add" onclick="addCourse()">➕ Add Course</button>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>🗑️ Delete Course</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg"><label>Semester</label><select id="del_cur_sem"></select></div>
+        <div class="fg"><label>Section</label>
+          <select id="del_cur_sec"><option>Electives</option><option>Skill Courses</option>
+            <option>Non-Electives</option><option>Professional Electives I</option>
+            <option>Professional Electives II</option><option>Professional Electives IV</option>
+            <option>Management Course II</option></select></div>
+        <div class="fg"><label>Course (partial match)</label><input id="del_cur_course" placeholder="Machine Learning"></div>
+        <div class="fg" style="display:flex;align-items:flex-end">
+          <button class="btn btn-del" onclick="deleteCourse()">🗑️ Delete</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>📖 Curriculum View</h3></div>
+    <div class="cb" id="curView" style="overflow-x:auto"></div>
+  </div>
+</div>
+
+<!-- ═══ STUDENTS ═══ -->
+<div class="content" id="tab-students">
+  <div class="stats-row" id="stuStats"></div>
+  <div class="section-card">
+    <div class="ch"><h3>➕ Add Student</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg"><label>Roll No *</label><input id="stu_roll" placeholder="23KB1A3001"></div>
+        <div class="fg"><label>Name *</label><input id="stu_name" placeholder="Full name"></div>
+        <div class="fg"><label>Phone</label><input id="stu_phone"></div>
+        <div class="fg"><label>Email</label><input id="stu_email"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg"><label>Branch</label>
+          <select id="stu_branch"><option>AI&DS</option><option>IT</option></select></div>
+        <div class="fg"><label>Section</label>
+          <select id="stu_sec"><option>A</option><option>B</option><option>C</option><option>D</option><option>-</option></select></div>
+        <div class="fg"><label>CGPA</label><input id="stu_cgpa" type="number" step="0.01" min="0" max="10"></div>
+        <div class="fg"><label>School</label><input id="stu_school"></div>
+      </div>
+      <button class="btn btn-add" onclick="addStudent()">➕ Add Student</button>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>🗑️ Delete Student</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg" style="max-width:220px"><label>Roll No</label><input id="del_roll" placeholder="23KB1A3001"></div>
+        <div class="fg" style="display:flex;align-items:flex-end;max-width:120px">
+          <button class="btn btn-del" onclick="deleteStudent()">🗑️ Delete</button></div>
+      </div>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>🎓 Students</h3><span id="stuCount" style="font-size:11px;color:#94a3b8"></span></div>
+    <div style="overflow-x:auto">
+      <table class="data-table"><thead><tr>
+        <th>#</th><th>Roll No</th><th>Name</th><th>Phone</th><th>Email</th><th>Branch</th><th>Sec</th><th>CGPA</th><th>Del</th>
+      </tr></thead><tbody id="stuTbody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ KNOWLEDGE BASE ═══ -->
+<div class="content" id="tab-knowledge">
+  <div class="section-card">
+    <div class="ch"><h3>➕ Add Knowledge Entry</h3></div>
+    <div class="cb">
+      <div class="form-row">
+        <div class="fg"><label>Title *</label><input id="kb_title" placeholder="e.g. Exam Schedule"></div>
+      </div>
+      <div class="form-row">
+        <div class="fg" style="min-width:100%"><label>Content *</label>
+          <textarea id="kb_text" placeholder="Enter knowledge content here…" style="min-height:90px"></textarea></div>
+      </div>
+      <button class="btn btn-add" onclick="addKB()">➕ Add Entry</button>
+    </div>
+  </div>
+  <div class="section-card">
+    <div class="ch"><h3>💡 Knowledge Base</h3><span id="kbCount" style="font-size:11px;color:#94a3b8"></span></div>
+    <div style="overflow-x:auto">
+      <table class="data-table"><thead><tr>
+        <th>#</th><th>Title</th><th>Content</th><th>Source</th><th>Del</th>
+      </tr></thead><tbody id="kbTbody"></tbody></table>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ AUDIT LOG ═══ -->
+<div class="content" id="tab-audit">
+  <div class="section-card">
+    <div class="ch"><h3>🔍 Recent Admin Actions</h3>
+      <button class="btn btn-save btn-sm" onclick="loadAudit()">🔄 Refresh</button></div>
+    <div id="auditList" style="max-height:600px;overflow-y:auto"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+let AUTH = '';
+const API = '';
+
+function login() {
+  AUTH = document.getElementById('pwdInput').value;
+  api('/admin/faculty/list').then(d => {
+    if (d.error) return toast('Wrong password', true);
+    document.getElementById('authStatus').textContent = '✓ Logged in';
+    document.getElementById('authStatus').style.color = '#10b981';
+    document.getElementById('tabsRow').style.display = 'flex';
+    loadAll();
+  }).catch(() => toast('Connection error', true));
+}
+
+function api(url, method, body) {
+  const h = {'X-Admin-Password': AUTH};
+  if (body) h['Content-Type'] = 'application/json';
+  return fetch(API + url, {method: method||'GET', headers: h, body: body ? JSON.stringify(body) : undefined}).then(r => r.json());
+}
+
+function toast(msg, err=false) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.className = err ? 'err' : 'ok';
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 3500);
+}
+
+function showTab(name, el) {
+  document.querySelectorAll('.content').forEach(c => c.style.display='none');
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('tab-'+name).style.display = 'block';
+  if (el) el.classList.add('active');
+}
+
+function loadAll() {
+  loadFaculty(); loadStudents(); loadCurriculum(); loadNotices(); loadKB(); loadAudit();
+  loadFacNames(); loadSections();
+}
+
+// ─── FACULTY ─────────────────────────────────────────────────────────────────
+function badge(d) {
+  const m={'Head of the Department':'badge-hod','Professor':'badge-prof','Associate Professor':'badge-assoc','Assistant Professor':'badge-asst'};
+  return `<span class="badge ${m[d]||''}">${d}</span>`;
+}
+
+function loadFaculty() {
+  api('/admin/faculty/list').then(d => {
+    const list = d.faculty||[];
+    document.getElementById('facCount').textContent = list.length + ' members';
+    document.getElementById('facStats').innerHTML = [
+      ['Total', list.length], ['HOD', list.filter(f=>f.designation==='Head of the Department').length],
+      ['Prof', list.filter(f=>f.designation==='Professor').length],
+      ['Assoc', list.filter(f=>f.designation==='Associate Professor').length],
+      ['Asst', list.filter(f=>f.designation==='Assistant Professor').length]
+    ].map(([l,v])=>`<div class="stat-box"><div class="sv">${v}</div><div class="sl">${l}</div></div>`).join('');
+    document.getElementById('facTbody').innerHTML = list.map((f,i)=>`<tr>
+      <td>${i+1}</td><td><b>${f.name||'—'}</b></td><td>${badge(f.designation||'')}</td>
+      <td>${f.Qualification||'—'}</td><td>${f.phone||'—'}</td>
+      <td style="font-size:11px">${f.email||'—'}</td><td>${f.date_of_joining||'—'}</td>
+      <td><button class="del-btn" onclick="delFaculty('${esc(f.name)}')">🗑️</button></td>
+    </tr>`).join('');
+  });
+}
+
+function esc(s){ return (s||'').replace(/'/g,"\\'"); }
+
+function addFaculty() {
+  const b = {name:v('fac_name'),designation:v('fac_desig'),Qualification:v('fac_qual'),
+    date_of_joining:v('fac_doj'),phone:v('fac_phone'),email:v('fac_email'),timetable:{}};
+  if (!b.name||!b.phone||!b.email) return toast('Name, phone, email required',true);
+  api('/admin/faculty/add','POST',b).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('✓ Added: '+d.name);
+    ['fac_name','fac_qual','fac_phone','fac_email','fac_doj'].forEach(i=>document.getElementById(i).value='');
+    loadFaculty(); loadFacNames();
+  });
+}
+function delFaculty(name) {
+  if(!confirm('Delete '+name+'?')) return;
+  api('/admin/faculty/delete','DELETE',{name}).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('🗑️ Deleted: '+name); loadFaculty(); loadFacNames();
+  });
+}
+
+// ─── FACULTY TIMETABLE ───────────────────────────────────────────────────────
+let facNames = [];
+function loadFacNames() {
+  api('/admin/faculty/list').then(d=>{
+    facNames = (d.faculty||[]).map(f=>f.name);
+    ['ftt_name','del_ftt_name','view_ftt'].forEach(id=>{
+      document.getElementById(id).innerHTML = facNames.map(n=>`<option value="${n}">${n}</option>`).join('');
+    });
+  });
+}
+
+function addFacTT() {
+  const b={name:v('ftt_name'),day:v('ftt_day'),time:v('ftt_time'),subject:v('ftt_subj'),
+    class:v('ftt_class'),type:v('ftt_type')};
+  if(!b.name||!b.day||!b.subject||!b.time) return toast('Name, day, time, subject required',true);
+  api('/admin/faculty/timetable/add','POST',b).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('✓ Slot added'); viewFacTT(); loadFaculty();
+  });
+}
+function delFacTT() {
+  const b={name:v('del_ftt_name'),day:v('del_ftt_day'),subject:v('del_ftt_subj')};
+  if(!b.subject) return toast('Subject required',true);
+  if(!confirm('Delete slot?')) return;
+  api('/admin/faculty/timetable/delete','DELETE',b).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('🗑️ Slot deleted'); viewFacTT();
+  });
+}
+function viewFacTT() {
+  const name = v('view_ftt');
+  api('/admin/faculty/list').then(d=>{
+    const fac = (d.faculty||[]).find(f=>f.name===name);
+    if(!fac) return;
+    const tt = fac.timetable||{};
+    const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    let html = '<table class="data-table"><thead><tr><th>Day</th><th>Time</th><th>Subject</th><th>Class</th><th>Type</th></tr></thead><tbody>';
+    days.forEach(day=>{
+      const slots = (tt[day]||[]).filter(s=>s.type!=='break');
+      slots.forEach(s=>{
+        const isLab = s.type==='lab'||s.type==='tutorial';
+        html += `<tr><td style="color:#880e4f;font-weight:700">${day.slice(0,3)}</td>
+          <td>${s.time}</td>
+          <td style="background:${isLab?'#fffde7':'#f0f4ff'};color:${isLab?'#5a4000':'#1a237e'};font-weight:600">${s.subject}</td>
+          <td style="font-size:11px">${s.class||'—'}</td>
+          <td><span style="padding:1px 7px;border-radius:5px;font-size:10.5px;background:${isLab?'#fff9c4':'#e8eaf6'};color:${isLab?'#f57f17':'#3949ab'}">${s.type}</span></td>
+        </tr>`;
+      });
+    });
+    html += '</tbody></table>';
+    document.getElementById('fttView').innerHTML = html||'<p style="color:#94a3b8">No timetable data.</p>';
+  });
+}
+
+// ─── CLASS TIMETABLE ─────────────────────────────────────────────────────────
+let sections = [];
+function loadSections() {
+  api('/admin/timetable/list').then(d=>{
+    sections = Object.keys(d.timetable||{});
+    ['ctt_sec','view_ctt'].forEach(id=>{
+      document.getElementById(id).innerHTML = sections.map(s=>`<option value="${s}">${s.replace(/_/g,' ')}</option>`).join('');
+    });
+  });
+}
+function updateClassTT() {
+  const b={section:v('ctt_sec'),day:v('ctt_day'),slot:v('ctt_slot'),value:v('ctt_val')};
+  if(!b.section||!b.day||!b.slot) return toast('Section, day, slot required',true);
+  api('/admin/timetable/update-slot','POST',b).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast(b.value?'✓ Slot updated':'✓ Slot deleted'); viewClassTT();
+  });
+}
+function viewClassTT() {
+  const sec = v('view_ctt');
+  api('/admin/timetable/list').then(d=>{
+    const tt = (d.timetable||{})[sec]||{};
+    const days = ['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+    const slots = new Set();
+    days.forEach(day=>Object.keys(tt[day]||{}).forEach(s=>slots.add(s)));
+    const slotArr = ['9-10','10-11','11-12','9-12','12-1','1-2','2-3','3-4','4-5','1-4','2-4'].filter(s=>slots.has(s));
+    let html = `<table class="data-table"><thead><tr><th>Day</th>${slotArr.map(s=>`<th>${s}</th>`).join('')}</tr></thead><tbody>`;
+    days.forEach(day=>{
+      const row = tt[day]||{};
+      html += `<tr><td style="font-weight:700;color:#880e4f">${day.slice(0,3)}</td>`;
+      slotArr.forEach(s=>{ html += `<td style="font-size:11px">${row[s]||'—'}</td>`; });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+    document.getElementById('cttView').innerHTML = html;
+  });
+}
+
+// ─── NOTICES ─────────────────────────────────────────────────────────────────
+function loadNotices() {
+  api('/admin/notices/list').then(d=>{
+    const list = d.notices||[];
+    document.getElementById('ntcCount').textContent = list.length+' notices';
+    document.getElementById('ntcTbody').innerHTML = list.map((n,i)=>`<tr>
+      <td>${i+1}</td><td style="font-size:11px;color:#6366f1">${n.id||'—'}</td>
+      <td>${n.date||'—'}</td><td><b>${n.title||'—'}</b></td>
+      <td><span style="font-size:11px;color:#94a3b8">${n.category||'—'}</span></td>
+      <td style="font-size:11px;max-width:220px">${(n.content||'').slice(0,80)}${n.content&&n.content.length>80?'…':''}</td>
+      <td><button class="del-btn" onclick="delNotice('${esc(n.id||'')}')">🗑️</button></td>
+    </tr>`).join('');
+  });
+}
+function addNotice() {
+  const b={title:v('ntc_title'),date:v('ntc_date')||new Date().toISOString().slice(0,10),
+    category:v('ntc_cat'),content:v('ntc_content'),applicable_to:v('ntc_app')};
+  if(!b.title||!b.content) return toast('Title and content required',true);
+  api('/admin/notices/add','POST',b).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('✓ Notice added');
+    ['ntc_title','ntc_content','ntc_app'].forEach(i=>document.getElementById(i).value='');
+    loadNotices();
+  });
+}
+function delNotice(id) {
+  if(!confirm('Delete notice '+id+'?')) return;
+  api('/admin/notices/delete','DELETE',{id}).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('🗑️ Notice deleted'); loadNotices();
+  });
+}
+
+// ─── CURRICULUM ──────────────────────────────────────────────────────────────
+function loadCurriculum() {
+  api('/admin/curriculum/list').then(d=>{
+    const sems = d.semesters||[];
+    ['cur_sem','del_cur_sem'].forEach(id=>{
+      document.getElementById(id).innerHTML = sems.map(s=>`<option value="${s}">${s}</option>`).join('');
+    });
+    renderCurriculum(d.curriculum||{});
+  });
+}
+function renderCurriculum(curr) {
+  let html='';
+  for(const[sem,secs] of Object.entries(curr)){
+    html+=`<div style="margin-bottom:14px"><div style="font-size:13px;font-weight:700;color:#a78bfa;
+      padding:7px 12px;background:rgba(99,102,241,.1);border-radius:6px;margin-bottom:6px">${sem}</div>`;
+    for(const[sec,items] of Object.entries(secs)){
+      if(!items||!items.length) continue;
+      html+=`<div style="margin-left:10px;margin-bottom:8px">
+        <div style="font-size:10.5px;font-weight:700;color:#94a3b8;text-transform:uppercase;margin-bottom:4px">${sec}</div>
+        <table style="width:100%;border-collapse:collapse;font-size:12px">
+          <tbody>`;
+      items.forEach((item,i)=>{
+        const c=item.Course||item.Option||'—', l=item.Lab||'—';
+        html+=`<tr style="background:${i%2?'':'rgba(255,255,255,.02)'}">
+          <td style="padding:5px 10px;color:#e8eaf6;width:70%">${c}</td>
+          <td style="padding:5px 10px;color:${l==='—'||l==='None'?'#4b5563':'#10b981'}">${l}</td>
+        </tr>`;
+      });
+      html+='</tbody></table></div>';
+    }
+    html+='</div>';
+  }
+  document.getElementById('curView').innerHTML = html||'<p style="color:#94a3b8">No data.</p>';
+}
+function addCourse() {
+  const b={semester:v('cur_sem'),section:v('cur_section'),course:v('cur_course'),lab:v('cur_lab')||'None'};
+  if(!b.course) return toast('Course required',true);
+  api('/admin/curriculum/add-course','POST',b).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('✓ Course added: '+d.course);
+    document.getElementById('cur_course').value='';
+    document.getElementById('cur_lab').value='';
+    loadCurriculum();
+  });
+}
+function deleteCourse() {
+  const b={semester:v('del_cur_sem'),section:v('del_cur_sec'),course:v('del_cur_course')};
+  if(!b.course) return toast('Course required',true);
+  if(!confirm('Delete "'+b.course+'"?')) return;
+  api('/admin/curriculum/delete-course','DELETE',b).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('🗑️ Deleted: '+d.course);
+    document.getElementById('del_cur_course').value='';
+    loadCurriculum();
+  });
+}
+
+// ─── STUDENTS ────────────────────────────────────────────────────────────────
+function loadStudents() {
+  api('/admin/student/list').then(d=>{
+    const list=d.students||[];
+    document.getElementById('stuCount').textContent=list.length+' records';
+    const aids=list.filter(s=>s.branch&&s.branch.includes('AI')).length;
+    const it=list.filter(s=>s.branch==='IT').length;
+    const cgpa=list.filter(s=>s.cgpa&&s.cgpa!='');
+    const avg=cgpa.length?(cgpa.reduce((a,s)=>a+parseFloat(s.cgpa||0),0)/cgpa.length).toFixed(2):'—';
+    document.getElementById('stuStats').innerHTML=[
+      ['Total',list.length],['AI&DS',aids],['IT',it],['Avg CGPA',avg]
+    ].map(([l,v])=>`<div class="stat-box"><div class="sv">${v}</div><div class="sl">${l}</div></div>`).join('');
+    document.getElementById('stuTbody').innerHTML=list.map((s,i)=>`<tr>
+      <td>${i+1}</td><td><b>${s.roll_no||'—'}</b></td><td>${s.name||'—'}</td>
+      <td>${s.phone||'—'}</td><td style="font-size:11px">${s.email||'—'}</td>
+      <td>${s.branch||'—'}</td><td>${s.section||'—'}</td><td>${s.cgpa||'—'}</td>
+      <td><button class="del-btn" onclick="delStudentRow('${esc(s.roll_no)}')">🗑️</button></td>
+    </tr>`).join('');
+  });
+}
+function addStudent() {
+  const b={roll_no:v('stu_roll').toUpperCase(),name:v('stu_name'),phone:v('stu_phone'),
+    email:v('stu_email'),branch:v('stu_branch'),section:v('stu_sec'),cgpa:v('stu_cgpa'),
+    school:v('stu_school'),tenth_percentage:'',inter_diploma:'',inter_percentage:''};
+  if(!b.roll_no||!b.name) return toast('Roll No and Name required',true);
+  api('/admin/student/add','POST',b).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('✓ Student added: '+b.roll_no);
+    ['stu_roll','stu_name','stu_phone','stu_email','stu_cgpa','stu_school'].forEach(i=>document.getElementById(i).value='');
+    loadStudents();
+  });
+}
+function deleteStudent() {
+  const roll=v('del_roll').toUpperCase();
+  if(!roll) return toast('Enter roll number',true);
+  if(!confirm('Delete '+roll+'?')) return;
+  delStudentRow(roll);
+}
+function delStudentRow(roll) {
+  api('/admin/student/delete','DELETE',{roll_no:roll}).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('🗑️ Deleted: '+roll);
+    document.getElementById('del_roll').value='';
+    loadStudents();
+  });
+}
+
+// ─── KNOWLEDGE BASE ──────────────────────────────────────────────────────────
+function loadKB() {
+  api('/admin/knowledge/list').then(d=>{
+    const list=d.knowledge||[];
+    document.getElementById('kbCount').textContent=list.length+' entries';
+    document.getElementById('kbTbody').innerHTML=list.map((k,i)=>`<tr>
+      <td>${i+1}</td><td><b>${k.title||'—'}</b></td>
+      <td style="font-size:11px">${(k.text||'').slice(0,100)}${(k.text||'').length>100?'…':''}</td>
+      <td style="font-size:11px;color:#6366f1">${k.source||'admin'}</td>
+      <td><button class="del-btn" onclick="delKB('${esc(k.id||k.title)}')">🗑️</button></td>
+    </tr>`).join('');
+  });
+}
+function addKB() {
+  const b={title:v('kb_title'),text:v('kb_text')};
+  if(!b.title||!b.text) return toast('Title and content required',true);
+  api('/admin/knowledge/add','POST',b).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('✓ Added to knowledge base');
+    document.getElementById('kb_title').value='';
+    document.getElementById('kb_text').value='';
+    loadKB();
+  });
+}
+function delKB(id) {
+  if(!confirm('Delete entry "'+id+'"?')) return;
+  api('/admin/knowledge/delete','DELETE',{id}).then(d=>{
+    if(d.error) return toast(d.error,true);
+    toast('🗑️ Deleted'); loadKB();
+  });
+}
+
+// ─── AUDIT ───────────────────────────────────────────────────────────────────
+function loadAudit() {
+  api('/admin/audit/list').then(d=>{
+    const list=d.audit||[];
+    document.getElementById('auditList').innerHTML=list.length?
+      list.map(e=>`<div class="audit-row">
+        <span class="at">${(e.ts||'').replace('T',' ').slice(0,19)}</span>
+        <span class="aa">${e.action||'—'}</span>
+      </div>`).join(''):
+      '<p style="padding:16px;color:#94a3b8">No audit entries.</p>';
+  });
+}
+
+// ─── Utility ─────────────────────────────────────────────────────────────────
+function v(id){ return (document.getElementById(id)||{}).value||''; }
+
+document.getElementById('pwdInput').addEventListener('keypress', e => {
+  if(e.key==='Enter') login();
+});
+window.addEventListener('load', () => {
+  const p=new URLSearchParams(window.location.search).get('pwd');
+  if(p){ document.getElementById('pwdInput').value=p; login(); }
+});
+</script>
+</body>
+</html>
