@@ -387,13 +387,16 @@ def handle_student_query(query: str) -> Optional[str]:
 
 embeddings_model  = None
 faiss_index       = None
+doc_embeddings    = None   # precomputed document embeddings matrix
 knowledge_docs: List[Dict] = []
 nlp               = None   # spaCy
 ml_classifier     = None   # TF-IDF + Naive Bayes pipeline
 ml_vectorizer     = None
+audit_file        = "admin_audit.json"
 
-CONFIDENCE_THRESHOLD = 0.28
-TOP_K = 7
+CONFIDENCE_THRESHOLD = 0.70
+TOP_K = 1
+
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Supervised ML — Training data & classifier
@@ -1501,6 +1504,82 @@ def build_all_circulars_table() -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 def load_knowledge_base() -> List[Dict]:
     docs = []
+    
+    # Load department info
+    if os.path.exists("nbkr_department_info.json"):
+        try:
+            with open("nbkr_department_info.json", "r", encoding="utf-8") as f:
+                dept = json.load(f)
+            if "vision" in dept:
+                docs.append({
+                    "text": "department vision. What is the vision of the department? Tell me about the vision of the department. Department Vision Statement.",
+                    "display_text": f"Department Vision:\n{dept['vision']}",
+                    "type": "department",
+                    "key": "vision"
+                })
+            if "mission" in dept:
+                docs.append({
+                    "text": "department mission. What is the mission of the department? Tell me about the mission of the department. Department Mission Statement.",
+                    "display_text": f"Department Mission:\n{dept['mission']}",
+                    "type": "department",
+                    "key": "mission"
+                })
+            if "hod_message" in dept:
+                docs.append({
+                    "text": "HOD message. What is the message from the HOD H.O.D.? HOD's message. Tell me about the HOD message.",
+                    "display_text": f"Message from HOD:\n{dept['hod_message']}",
+                    "type": "department",
+                    "key": "hod_message"
+                })
+            if "about" in dept:
+                docs.append({
+                    "text": "about the department. Tell me about the AI & DS department. General department info and information.",
+                    "display_text": f"About the Department:\n{dept['about']}",
+                    "type": "department",
+                    "key": "about"
+                })
+            if "peos" in dept:
+                peo_text = "Department Program Educational Objectives (PEOs):\n" + "\n".join(dept["peos"])
+                docs.append({
+                    "text": "department PEOs. What are the Program Educational Objectives PEOs of the department? Tell me about the PEOs.",
+                    "display_text": peo_text,
+                    "type": "department",
+                    "key": "peos"
+                })
+            if "psos" in dept:
+                pso_text = "Department Program Specific Outcomes (PSOs):\n" + "\n".join(dept["psos"])
+                docs.append({
+                    "text": "department PSOs. What are the Program Specific Outcomes PSOs of the department? Tell me about the PSOs.",
+                    "display_text": pso_text,
+                    "type": "department",
+                    "key": "psos"
+                })
+            print("✓ Loaded department info into knowledge base")
+        except Exception as e:
+            print(f"⚠ Error loading department info: {e}")
+
+    # Load bus fees
+    if os.path.exists("nbkr_bus_fees.json"):
+        try:
+            with open("nbkr_bus_fees.json", "r", encoding="utf-8") as f:
+                bus_data = json.load(f)
+            for route_name, stops in bus_data.get("bus_fees", {}).items():
+                route_label = route_name.replace("_", " ").title()
+                for stop_entry in stops:
+                    stop = stop_entry.get("stop", "")
+                    fee = stop_entry.get("fee", 0)
+                    text = f"The bus fee for {stop} on the {route_label} is Rs {fee} per year."
+                    docs.append({
+                        "text": text,
+                        "type": "bus_fee",
+                        "stop": stop,
+                        "fee": fee,
+                        "route": route_label
+                    })
+            print("✓ Loaded bus fees into knowledge base")
+        except Exception as e:
+            print(f"⚠ Error loading bus fees: {e}")
+
     if os.path.exists("aids_faculty_data.json"):
         with open("aids_faculty_data.json","r",encoding="utf-8") as f:
             faculty_list = json.load(f)
@@ -1512,7 +1591,6 @@ def load_knowledge_base() -> List[Dict]:
             phone = fac.get("phone","")
             email = fac.get("email","")
             doj   = fac.get("date_of_joining","")
-            # Rich text for accurate RAG embedding — includes all searchable fields
             text  = (f"{name} is {desig} in AI & DS Department at NBKR Institute. "
                      f"Specialization: {spec}.")
             if qual:  text += f" Qualification: {qual}."
@@ -1528,7 +1606,6 @@ def load_knowledge_base() -> List[Dict]:
         subjects_map = tt.get("subjects", {})
         faculty_map  = tt.get("faculty", {})
         for section, days in tt.get("timetable",{}).items():
-            # Determine year label from section key
             if "2nd_Year" in section:
                 year_label = "2nd Year 2nd Semester"
             else:
@@ -1543,15 +1620,12 @@ def load_knowledge_base() -> List[Dict]:
                              "section":section,"day":day,"year":year_label})
 
     for kb_file in ["nbkr_knowledge_base.json","aids_timetable_kb.json"]:
-        # aids_faculty_kb.json is intentionally excluded — all faculty info
-        # comes exclusively from aids_faculty_data.json to avoid stale duplicates.
         if os.path.exists(kb_file):
             with open(kb_file,"r",encoding="utf-8") as f:
                 for key, val in json.load(f).items():
                     if val and str(val).strip():
-                        docs.append({"text":f"{key}: {val}","type":"knowledge","key":key})
+                        docs.append({"text":f"{key}: {val}","type":"general","key":key})
 
-    # Load circulars
     if os.path.exists("nbkr_circulars.json"):
         with open("nbkr_circulars.json","r",encoding="utf-8") as f:
             for c in json.load(f):
@@ -1569,7 +1643,7 @@ def load_knowledge_base() -> List[Dict]:
 # RAG — FAISS initialisation
 # ─────────────────────────────────────────────────────────────────────────────
 def initialize_rag() -> bool:
-    global embeddings_model, faiss_index, knowledge_docs
+    global embeddings_model, faiss_index, knowledge_docs, doc_embeddings
     print("🔄 Initialising RAG engine …")
     try:
         from sentence_transformers import SentenceTransformer
@@ -1586,9 +1660,10 @@ def initialize_rag() -> bool:
         import faiss
         texts = [d["text"] for d in knowledge_docs]
         vecs  = embeddings_model.encode(texts, show_progress_bar=False, normalize_embeddings=True)
+        doc_embeddings = vecs.astype("float32")
         dim   = vecs.shape[1]
         faiss_index = faiss.IndexFlatIP(dim)
-        faiss_index.add(vecs.astype("float32"))
+        faiss_index.add(doc_embeddings)
         print(f"✓ FAISS index built  ({len(knowledge_docs)} vectors, dim={dim})")
         return True
     except Exception as e:
@@ -1603,6 +1678,29 @@ def retrieve(qa: QueryAnalysis, top_k: int = TOP_K) -> List[Tuple[Dict, float]]:
     scores, indices = faiss_index.search(q_vec, top_k)
     return [(knowledge_docs[idx], float(score))
             for score, idx in zip(scores[0], indices[0]) if idx < len(knowledge_docs)]
+
+
+def retrieve_filtered(qa: QueryAnalysis, doc_type: str) -> List[Tuple[Dict, float]]:
+    if embeddings_model is None or doc_embeddings is None:
+        return []
+    matching_indices = [i for i, d in enumerate(knowledge_docs) if d["type"] == doc_type]
+    if not matching_indices:
+        return []
+    
+    search_text = qa.expanded if qa.expanded.strip() else qa.original
+    q_vec = embeddings_model.encode([search_text], normalize_embeddings=True)[0]
+    
+    filtered_embs = doc_embeddings[matching_indices]
+    scores = np.dot(filtered_embs, q_vec)
+    
+    results = []
+    for idx_in_filtered, score in enumerate(scores):
+        original_idx = matching_indices[idx_in_filtered]
+        results.append((knowledge_docs[original_idx], float(score)))
+        
+    results.sort(key=lambda x: x[1], reverse=True)
+    return results
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -2449,6 +2547,89 @@ def _help_card() -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 # Main response function
 # ─────────────────────────────────────────────────────────────────────────────
+def classify_query_module(query: str, qa: QueryAnalysis) -> str:
+    q = query.lower().strip()
+    
+    # 1. Student Check
+    # Roll numbers or explicit student keywords
+    if _ROLL_PAT.search(q) or any(w in q for w in ["student", "roll", "cgpa", "topper", "student info", "student list"]):
+        # Make sure it's not a timetable query
+        timetable_kw = {"timetable","time table","schedule","class","period","timing","lecture","lab","monday","tuesday","wednesday","thursday","friday","saturday","weekly","slot","semester","sem "}
+        if not any(kw in q for kw in timetable_kw):
+            return "student"
+
+    # 2. Timetable Check
+    if any(w in q for w in ["timetable", "schedule", "time table", "class timing", "period", "slot", "section a", "section b", "section c", "section d"]):
+        return "timetable"
+        
+    # 3. Faculty Check
+    # Check for direct matches or keywords
+    faculty_keywords = ["faculty", "teacher", "professor", "lecturer", "staff", "designation", "specialization", "doj", "joining date", "teaches", "teaching"]
+    if any(w in q for w in faculty_keywords) or any(w in q for w in ["hod", "head of department", "head of dept"]):
+        return "faculty"
+    # Also check if any word matches a faculty member's name
+    skip_words = {"sir","mam","madam","prof","dr","mr","mrs","ms","faculty","teacher","lecturer","who","is","the","tell","me","show","find","get","what"}
+    for word in re.sub(r'[^a-z\s]', ' ', q).split():
+        if len(word) >= 3 and word not in skip_words:
+            for f in _FACULTY_DATA:
+                fname = f.get("name","").lower()
+                if word in fname or word in fname.replace(" ",""):
+                    return "faculty"
+
+    # 4. Bus Fee Check
+    if any(w in q for w in ["bus", "fee", "fare", "charge", "transport", "route", "stop", "boarding point"]):
+        return "bus_fee"
+    # Or matches any stop name
+    for route_stops in _BUS_FEES.values():
+        for stop_entry in route_stops:
+            stop = stop_entry.get("stop", "").lower()
+            if stop and any(word in q for word in stop.replace("(", " ").replace(")", " ").split() if len(word) >= 4):
+                return "bus_fee"
+
+    # 5. Department Check
+    department_keywords = ["department", "dept", "vision", "mission", "peo", "pso", "outcomes", "objectives", "about department", "about the department", "hod message", "message from hod"]
+    if any(w in q for w in department_keywords):
+        return "department"
+
+    # 6. Circulars Check
+    if any(w in q for w in ["circular", "notice", "announcement", "latest notice"]):
+        return "circular"
+
+    # 7. General Check (hostel, library, placements, admissions, online portals etc.)
+    general_keywords = ["hostel", "admission", "admissions", "course", "courses", "library", "placement", "placements", "portal", "intranet", "e-journal", "ejournal", "assessment", "exam duties", "login"]
+    if any(w in q for w in general_keywords):
+        return "general"
+        
+    return "unknown"
+
+
+def log_failed_query(query: str, module: str, score: float):
+    file_path = "failed_queries.json"
+    try:
+        if os.path.exists(file_path):
+            with open(file_path, "r", encoding="utf-8") as f:
+                logs = json.load(f)
+        else:
+            logs = []
+    except Exception:
+        logs = []
+        
+    logs.append({
+        "timestamp": datetime.now().isoformat(),
+        "query": query,
+        "classified_module": module,
+        "top_score": round(score, 4)
+    })
+    
+    # Keep last 500 entries
+    logs = logs[-500:]
+    try:
+        with open(file_path, "w", encoding="utf-8") as f:
+            json.dump(logs, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        print(f"Error logging failed query: {e}")
+
+
 def get_response(query: str, conn_id: str = "default") -> str:
     query = query.strip()
     if not query:
@@ -2485,7 +2666,7 @@ def get_response(query: str, conn_id: str = "default") -> str:
       ❌ Wrong password. Try again.
     </div>
   </div>
-</div>"""
+ </div>"""
 
     # ── Static intents ────────────────────────────────────────────────────
     if intent == "greeting":
@@ -2506,118 +2687,79 @@ def get_response(query: str, conn_id: str = "default") -> str:
     if intent == "help":
         return _help_card()
 
-    # ── Bus fee query ─────────────────────────────────────────────────────
-    bus_reply = handle_bus_fee_query(query)
-    if bus_reply is not None:
-        return bus_reply
+    # Classify the target module
+    module = classify_query_module(query, qa)
+    
+    if module == "unknown":
+        log_failed_query(query, "unknown", 0.0)
+        return "I don't know the answer to that question. Please contact the department office or administrator."
 
-    # ── Curriculum query ──────────────────────────────────────────────────
-    curric_reply = handle_curriculum_query(query)
-    if curric_reply is not None:
-        return curric_reply
+    # Route strictly to relevant data source
+    if module == "student":
+        student_reply = handle_student_query(query)
+        if student_reply is not None:
+            return student_reply
+        log_failed_query(query, "student", 0.0)
+        return "I don't know the answer to that question. Please contact the department office or administrator."
 
-    # ── Student query — check before RAG ─────────────────────────────────
-    # Also fires on roll-number patterns regardless of detected intent
-    student_reply = handle_student_query(query)
-    if student_reply is not None:
-        return student_reply
+    if module == "timetable":
+        timetable_reply = handle_timetable_query(qa)
+        if timetable_reply is not None:
+            return timetable_reply
+        log_failed_query(query, "timetable", 0.0)
+        return "I don't know the answer to that question. Please contact the department office or administrator."
 
-    # ── Pre-RAG faculty name intercept ───────────────────────────────────
-    # Catches cases like "siva prathap", "jyothi ma'am", "chiranjeevi sir"
-    # even when intent detector misses them.
-    _fac_skip = {"sir","mam","madam","prof","dr","mr","mrs","ms","faculty",
-                 "teacher","lecturer","who","the","is","about","info","details",
-                 "tell","me","show","find","get","what","his","her","their"}
-    _fac_words = [w for w in re.sub(r'[^a-z\s]', ' ', query.lower()).split()
-                  if len(w) >= 3 and w not in _fac_skip]
-    if _fac_words and intent not in ("timetable","circulars","student","greeting","farewell","help"):
-        _best_fscore, _best_fac = 0.0, None
-        for _f in _FACULTY_DATA:
-            _fn = _normalise_name(_f.get("name",""))
-            _fn_ns = _fn.replace(" ","")
-            for _w in _fac_words:
-                if _w in _fn or _w in _fn_ns:
-                    _sc = len(_w) / max(len(_fn), 1)
-                    if _sc > _best_fscore:
-                        _best_fscore, _best_fac = _sc, _f
-        if _best_fac and _best_fscore >= 0.15:
-            return build_faculty_card(_best_fac)
+    if module == "bus_fee":
+        # Search bus_fee documents in RAG
+        results = retrieve_filtered(qa, "bus_fee")
+        if results and results[0][1] >= CONFIDENCE_THRESHOLD:
+            doc = results[0][0]
+            stop = doc.get("stop", "")
+            fee = doc.get("fee", 0)
+            route = doc.get("route", "")
+            matches = [{"location": stop, "fee": fee, "route": route, "year": _BUS_YEAR}]
+            return build_bus_fee_card(matches, stop)
+        
+        # If RAG did not match, fallback to dictionary search
+        location = re.sub(
+            r'\b(bus|fee|fees|fare|charge|charges|transport|transportation|'
+            r'from|for|what|is|the|how|much|cost|amount|boarding|route|routes)\b',
+            '', query.lower(), flags=re.IGNORECASE
+        ).strip().strip('?').strip()
+        if location:
+            matches = _search_bus_fee(location)
+            if matches:
+                # Top result only
+                return build_bus_fee_card([matches[0]], location)
+        
+        log_failed_query(query, "bus_fee", results[0][1] if results else 0.0)
+        return "I don't know the answer to that question. Please contact the department office or administrator."
 
-    # ── Circulars / Announcements ─────────────────────────────────────────
-    if intent == "circulars":
-        q_lower = query.lower()
-        # Specific circular by ID
-        for c in _CIRCULARS:
-            if c.get("id","").lower() in q_lower:
-                return build_circular_card(c)
-        # Latest circular
-        if any(w in q_lower for w in ["latest","recent","new","last","current"]):
-            if _CIRCULARS:
-                return build_circular_card(_CIRCULARS[-1])
-        # Fee / early bird / commencement specific
-        if any(w in q_lower for w in ["fee","tuition","early bird","payment","pay",
-                                       "commencement","start","enrolment","enroll"]):
-            for c in _CIRCULARS:
-                if any(k in c.get("content","").lower()
-                       for k in ["fee","tuition","early bird","commencement"]):
-                    return build_circular_card(c)
-        # Default: show all circulars table
-        return build_all_circulars_table()
-
-    # ── Timetable — direct handler, no RAG ───────────────────────────────
-    if intent == "timetable":
-        return handle_timetable_query(qa)
-
-    # ── Faculty — fully handled here, NEVER falls through to RAG ────────
-    if intent == "faculty":
-        q_lower = query.lower()
-
+    if module == "faculty":
         # 1. HOD shortcut
-        if any(w in q_lower for w in ["hod","head of department","head of dept"]):
+        if any(w in query.lower() for w in ["hod","head of department","head of dept"]):
             hod = next((f for f in _FACULTY_DATA if "head" in f.get("designation","").lower()), None)
-            if hod:
-                return build_faculty_card(hod)
+            if hod: return build_faculty_card(hod)
 
+        # 2. Check list
         list_signals = {"list","all","show","every","members","staff","teachers","lecturers","how many"}
         is_list = bool(set(qa.tokens) & list_signals) or any(
-            w in q_lower for w in ["list","all faculty","faculty members","show faculty","who are","how many"]
+            w in query.lower() for w in ["list","all faculty","faculty members","show faculty","who are","how many"]
         )
         if is_list:
             return build_faculty_list_table()
 
-        # 2. Direct name match on full query
+        # 3. Direct name match
         direct = _find_faculty_by_name(query)
-        if direct:
-            return build_faculty_card(direct)
+        if direct: return build_faculty_card(direct)
 
-        # 3. Try each spaCy-extracted person name
-        for pname in qa.person_names:
-            match = _find_faculty_by_name(pname)
-            if match:
-                return build_faculty_card(match)
-
-        # 4. Deep substring scan — split query into all words, check each word
-        #    as a substring inside any faculty name (handles "siva" → "Sivapratap",
-        #    "jyothi" → "P. Jyothi", "prathap" → "Sivapratap" etc.)
-        skip_words = {"sir","mam","madam","ma","am","prof","dr","mr","mrs","ms",
-                      "faculty","teacher","lecturer","about","info","details",
-                      "who","is","the","tell","me","show","get","find"}
-        query_words = [w for w in re.sub(r'[^a-z\s]', ' ', q_lower).split()
-                       if len(w) >= 3 and w not in skip_words]
-        best_score = 0.0
-        best_fac   = None
-        for f in _FACULTY_DATA:
-            fn = _normalise_name(f.get("name", ""))  # e.g. "m sivapratap reddy"
-            fn_nospace = fn.replace(" ", "")          # "msivapratapreddy"
-            for word in query_words:
-                # check word inside name-with-spaces OR name-without-spaces
-                if word in fn or word in fn_nospace:
-                    score = len(word) / max(len(fn), 1)
-                    if score > best_score:
-                        best_score = score
-                        best_fac   = f
-        if best_fac:
-            return build_faculty_card(best_fac)
+        # 4. Filtered semantic search
+        results = retrieve_filtered(qa, "faculty")
+        if results and results[0][1] >= CONFIDENCE_THRESHOLD:
+            doc = results[0][0]
+            fac_name = doc.get("name", "")
+            match = next((f for f in _FACULTY_DATA if f.get("name","").lower() == fac_name.lower()), None)
+            if match: return build_faculty_card(match)
 
         # 5. Specialisation queries
         spec_map = {
@@ -2630,40 +2772,68 @@ def get_response(query: str, conn_id: str = "default") -> str:
             "Computer Science":        ["computer","science","cs"],
         }
         for spec_label, lemmas in spec_map.items():
-            if any(lm in qa.tokens for lm in lemmas) or spec_label.lower() in q_lower:
+            if any(lm in qa.tokens for lm in lemmas) or spec_label.lower() in query.lower():
                 matched = [f for f in _FACULTY_DATA
                            if any(lm in f.get("specialization","").lower() for lm in lemmas)]
-                if matched:
-                    return build_specialization_table(spec_label, matched)
+                if matched: return build_specialization_table(spec_label, matched)
 
-        # 6. Nothing matched — show full faculty list
-        return build_faculty_list_table()
+        log_failed_query(query, "faculty", results[0][1] if results else 0.0)
+        return "I don't know the answer to that question. Please contact the department office or administrator."
 
-    # ── RAG retrieval ─────────────────────────────────────────────────────
-    results = retrieve(qa, top_k=TOP_K)
+    if module == "department":
+        results = retrieve_filtered(qa, "department")
+        if results and results[0][1] >= CONFIDENCE_THRESHOLD:
+            doc = results[0][0]
+            text = doc.get("display_text", doc["text"])
+            body_html = f'<p style="padding:12px 16px;font-size:13.5px;color:#333;line-height:1.7;margin:0;white-space:pre-line">{text}</p>'
+            return f"""
+<div style="margin:8px 0;font-family:'Segoe UI',sans-serif">
+  <div style="background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;padding:10px 16px;border-radius:10px 10px 0 0">
+    <b>ℹ️ Department Information</b>
+  </div>
+  <div style="background:#fff;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 10px 10px;overflow:hidden">
+    {body_html}
+  </div>
+</div>"""
 
-    if not results:
-        return _info_card("❓ Not Found", [
-            ("Query", query),
-            ("Suggestion","Ask about NBKR AI &amp; DS faculty, timetables, or services."),
-        ])
+        log_failed_query(query, "department", results[0][1] if results else 0.0)
+        return "I don't know the answer to that question. Please contact the department office or administrator."
 
-    answer = synthesize_answer(qa, results, intent)
+    if module == "circular":
+        q_lower = query.lower()
+        for c in _CIRCULARS:
+            if c.get("id","").lower() in q_lower:
+                return build_circular_card(c)
+        if any(w in q_lower for w in ["latest","recent","new","last","current"]):
+            if _CIRCULARS: return build_circular_card(_CIRCULARS[-1])
 
-    if answer is None:
-        best_score = results[0][1] if results else 0
-        if best_score < 0.20:
-            return _info_card("🤷 Out of Scope", [
-                ("Query",      query),
-                ("Confidence", f"{best_score:.2f} (below threshold)"),
-                ("Suggestion", "Try asking about faculty, timetables, or institute services."),
-            ])
-        return _info_card("❓ Insufficient Information", [
-            ("Query",      query),
-            ("Suggestion", "Could you rephrase or ask something more specific about NBKR Institute?"),
-        ])
+        results = retrieve_filtered(qa, "circular")
+        if results and results[0][1] >= CONFIDENCE_THRESHOLD:
+            doc = results[0][0]
+            circ_data = doc.get("data")
+            if circ_data: return build_circular_card(circ_data)
 
-    return answer
+        if any(w in q_lower for w in ["all notices", "list notices", "notices", "announcements", "circulars", "show circulars"]):
+            return build_all_circulars_table()
+
+        log_failed_query(query, "circular", results[0][1] if results else 0.0)
+        return "I don't know the answer to that question. Please contact the department office or administrator."
+
+    if module == "general":
+        results = retrieve_filtered(qa, "general")
+        if results and results[0][1] >= CONFIDENCE_THRESHOLD:
+            doc = results[0][0]
+            text = doc["text"]
+            key = doc.get("key", "Information")
+            val = text.replace(f"{key}: ", "")
+            return _info_card(f"ℹ️ {key.title()}", [(key.upper(), val)])
+
+        log_failed_query(query, "general", results[0][1] if results else 0.0)
+        return "I don't know the answer to that question. Please contact the department office or administrator."
+
+    log_failed_query(query, module, 0.0)
+    return "I don't know the answer to that question. Please contact the department office or administrator."
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -3845,6 +4015,20 @@ async def admin_audit_list(request: Request):
             entries = json.load(f)
         return JSONResponse({"audit":list(reversed(entries)),"total":len(entries)})
     return JSONResponse({"audit":[],"total":0})
+
+
+@app.get("/admin/failed-queries")
+async def admin_failed_queries_list(request: Request):
+    if not _check_admin(request): return JSONResponse({"error":"Unauthorized"},status_code=401)
+    logs = []
+    if os.path.exists("failed_queries.json"):
+        try:
+            with open("failed_queries.json", "r", encoding="utf-8") as f:
+                logs = json.load(f)
+        except Exception:
+            pass
+    return JSONResponse({"failed_queries": list(reversed(logs)), "total": len(logs)})
+
 
 
 # ─────────────────────────────────────────────────────────────────────────────

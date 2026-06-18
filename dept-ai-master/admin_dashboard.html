@@ -80,6 +80,11 @@ body{font-family:'Segoe UI',sans-serif;background:#0a0a14;color:#e8eaf6;height:1
 .modal{background:#16162a;border:1px solid rgba(255,255,255,.1);border-radius:14px;
   padding:24px;width:520px;max-width:95vw;max-height:90vh;overflow-y:auto}
 .modal h3{font-size:15px;font-weight:700;margin-bottom:18px}
+/* Badges */
+.badge{padding:2px 6px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-m{background:rgba(124,58,237,0.15);color:#a78bfa;border:1px solid rgba(124,58,237,0.3)}
+.badge-low{background:rgba(239,68,68,0.15);color:#f87171;border:1px solid rgba(239,68,68,0.3)}
+.badge-high{background:rgba(16,185,129,0.15);color:#34d399;border:1px solid rgba(16,185,129,0.3)}
 </style>
 </head>
 <body>
@@ -105,6 +110,7 @@ body{font-family:'Segoe UI',sans-serif;background:#0a0a14;color:#e8eaf6;height:1
     <button class="nav-btn" onclick="go('knowledge','💡 Knowledge Base')">💡 Knowledge Base <span class="cnt" id="c-kb">0</span></button>
     <button class="nav-btn" onclick="go('deptinfo','🏛️ Dept Info')">🏛️ Dept Info</button>
     <button class="nav-btn" onclick="go('audit','🔍 Audit Log')">🔍 Audit Log</button>
+    <button class="nav-btn" onclick="go('failed','🔍 Failed Queries')">🔍 Failed Queries <span class="cnt" id="c-failed">0</span></button>
   </div>
   <div class="sb-footer">
     <a href="/">← Back to Chatbot</a>
@@ -460,6 +466,30 @@ body{font-family:'Segoe UI',sans-serif;background:#0a0a14;color:#e8eaf6;height:1
     </div>
   </div>
 
+  <!-- FAILED QUERIES -->
+  <div class="panel" id="panel-failed">
+    <div class="card">
+      <div class="card-header">
+        <h3>🔍 Failed Queries Log</h3>
+        <button class="btn btn-s btn-sm" onclick="loadFailedQueries()">🔄 Refresh</button>
+      </div>
+      <div style="overflow-x:auto">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th style="width:50px">#</th>
+              <th style="width:180px">Timestamp</th>
+              <th>Query</th>
+              <th style="width:140px">Classified Module</th>
+              <th style="width:120px">Confidence Score</th>
+            </tr>
+          </thead>
+          <tbody id="failed-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </div><!-- main -->
 
 <!-- Bus Route Modal -->
@@ -503,6 +533,7 @@ function go(panel, title) {
   if (panel === 'audit') loadAudit();
   if (panel === 'deptinfo') loadDeptInfo();
   if (panel === 'curriculum') loadCurriculum();
+  if (panel === 'failed') loadFailedQueries();
 }
 
 function filterTable(tbodyId, q) {
@@ -520,7 +551,7 @@ window.addEventListener('load', () => {
   localStorage.setItem('nbkr_admin_pwd', PWD);
   loadFaculty(); loadStudents(); loadBusFees(); loadNotices();
   loadPlacements(); loadEvents(); loadKnowledge(); loadSubjects();
-  loadCurriculum();
+  loadCurriculum(); loadFailedQueries();
 });
 </script>
 
@@ -1126,6 +1157,21 @@ function loadAudit() {
       <td style="font-size:11.5px;color:#666;white-space:nowrap">${(e.ts||'').replace('T',' ').slice(0,19)}</td>
       <td style="color:#a78bfa">${e.action||'—'}</td>
     </tr>`).join('') || '<tr><td colspan="2" style="color:#666;padding:16px">No audit entries.</td></tr>';
+  });
+}
+
+// ── FAILED QUERIES ────────────────────────────────────────────────────────────
+function loadFailedQueries() {
+  api('/admin/failed-queries').then(d => {
+    const list = d.failed_queries || [];
+    document.getElementById('c-failed').textContent = list.length;
+    document.getElementById('failed-tbody').innerHTML = list.map((q, i) => `<tr>
+      <td>${i+1}</td>
+      <td style="font-size:11.5px;color:#666;white-space:nowrap">${(q.timestamp||'').replace('T',' ').slice(0,19)}</td>
+      <td><b>${esc(q.query)}</b></td>
+      <td><span class="badge badge-m">${q.classified_module||'—'}</span></td>
+      <td><span class="badge ${q.top_score >= 0.7 ? 'badge-high' : 'badge-low'}">${(q.top_score * 100).toFixed(1)}%</span></td>
+    </tr>`).join('') || '<tr><td colspan="5" style="color:#666;padding:16px;text-align:center">No failed queries.</td></tr>';
   });
 }
 
