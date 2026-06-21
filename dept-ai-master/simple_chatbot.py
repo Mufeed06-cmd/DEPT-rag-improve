@@ -363,28 +363,43 @@ async def get_home():
                 display: flex;
                 flex-direction: column;
                 overflow: hidden;
+                transition: all 0.3s ease;
+            }
+            .chat-container.is-home {
+                justify-content: space-between;
             }
             .chat-header {
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white;
                 padding: 20px;
-                text-align: center;
             }
             .chat-header h1 {
-                font-size: 24px;
-                margin-bottom: 5px;
+                font-size: 22px;
+                font-weight: 700;
             }
             .chat-header p {
-                font-size: 14px;
+                font-size: 13px;
                 opacity: 0.9;
             }
-            .nlp-badge {
-                display: inline-block;
-                background: rgba(255,255,255,0.2);
-                padding: 4px 12px;
-                border-radius: 12px;
-                font-size: 11px;
-                margin-top: 5px;
+            .new-chat-btn {
+                background: rgba(255, 255, 255, 0.15);
+                border: 1px solid rgba(255, 255, 255, 0.25);
+                color: white;
+                padding: 6px 14px;
+                border-radius: 18px;
+                font-size: 13px;
+                font-weight: 600;
+                cursor: pointer;
+                display: flex;
+                align-items: center;
+                transition: background 0.2s, transform 0.2s;
+            }
+            .new-chat-btn:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: translateY(-1px);
+            }
+            .new-chat-btn:active {
+                transform: translateY(0);
             }
             .chat-messages {
                 flex: 1;
@@ -428,6 +443,26 @@ async def get_home():
                 border-top: 1px solid #e0e0e0;
                 display: flex;
                 gap: 10px;
+                width: 100%;
+                transition: all 0.3s ease;
+            }
+            .chat-container.is-home .chat-input-container {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                justify-content: flex-start;
+                align-items: center;
+                border-top: none;
+                padding-top: 0;
+            }
+            .chat-input-wrap {
+                display: flex;
+                width: 100%;
+                gap: 10px;
+            }
+            .chat-container.is-home .chat-input-wrap {
+                max-width: 600px;
+                margin-top: 20px;
             }
             .chat-input {
                 flex: 1;
@@ -471,35 +506,65 @@ async def get_home():
             .status.disconnected {
                 color: #f44336;
             }
+            .welcome {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 12px;
+                padding: 20px;
+            }
+            .welcome-icon {
+                font-size: 54px;
+                animation: float 3s ease-in-out infinite;
+            }
+            .welcome h2 {
+                font-size: 26px;
+                color: #333;
+                font-weight: 700;
+            }
+            @keyframes float {
+                0%, 100% { transform: translateY(0); }
+                50% { transform: translateY(-8px); }
+            }
+            @media (max-width: 600px) {
+                .chat-header h1 { font-size: 18px; }
+                .new-chat-btn { padding: 6px 10px; font-size: 12px; }
+                .welcome h2 { font-size: 20px; }
+                .chat-container { width: 95%; height: 95vh; }
+            }
         </style>
     </head>
     <body>
-        <div class="chat-container">
+        <div class="chat-container is-home">
             <div class="chat-header">
-                <h1>🎓 NBKR Institute AI Chatbot</h1>
-                <p>Enhanced with Natural Language Processing</p>
-                <span class="nlp-badge">🧠 NLP Powered</span>
-            </div>
-            <div class="status" id="status">Connecting...</div>
-            <div class="chat-messages" id="messages">
-                <div class="message bot">
-                    <div class="message-content">
-                        Hello! 👋 I'm your NBKR Institute AI assistant powered by Natural Language Processing. I can understand your questions better and provide accurate information about:
-
-📚 Faculty & Departments
-🎓 Admissions & Courses  
-💻 Online Services (Attendance, E-journals)
-📊 Assessments & Timetables
-🏢 Campus Facilities
-📅 AI & DS First Year Timetable (All Sections)
-
-Try asking me anything!
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <h1>🎓 NBKR Department Chatbot</h1>
+                        <p>Natural Language Processing</p>
                     </div>
+                    <button class="new-chat-btn" onclick="newChat()" title="Start a new conversation">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px; margin-right:4px;"><path d="M12 5v14M5 12h14"/></svg>
+                        New Chat
+                    </button>
                 </div>
             </div>
+
+            <div class="status" id="status">Connecting...</div>
+            
+            <div class="welcome" id="welcomeScreen">
+                <div class="welcome-icon">🎓</div>
+                <h2>NBKR Department Chatbot</h2>
+            </div>
+
+            <div class="chat-messages" id="messages" style="display: none;"></div>
+
             <div class="chat-input-container">
-                <input type="text" class="chat-input" id="messageInput" placeholder="Ask me anything about NBKR Institute..." />
-                <button class="send-button" onclick="sendMessage()">Send</button>
+                <div class="chat-input-wrap">
+                    <input type="text" class="chat-input" id="messageInput" placeholder="Ask me anything about NBKR Institute..." />
+                    <button class="send-button" onclick="sendMessage()">Send</button>
+                </div>
             </div>
         </div>
 
@@ -508,9 +573,11 @@ Try asking me anything!
             const messagesDiv = document.getElementById('messages');
             const messageInput = document.getElementById('messageInput');
             const statusDiv = document.getElementById('status');
+            const welcomeScreen = document.getElementById('welcomeScreen');
+            const chatContainer = document.querySelector('.chat-container');
 
             function connect() {
-                ws = new WebSocket('ws://localhost:8000/ws');
+                ws = new WebSocket('ws://' + location.host + '/ws');
                 
                 ws.onopen = () => {
                     statusDiv.textContent = '● Connected';
@@ -534,6 +601,10 @@ Try asking me anything!
             }
 
             function addMessage(text, sender) {
+                welcomeScreen.style.display = 'none';
+                messagesDiv.style.display = 'block';
+                chatContainer.classList.remove('is-home');
+
                 const messageDiv = document.createElement('div');
                 messageDiv.className = `message ${sender}`;
                 
@@ -557,6 +628,13 @@ Try asking me anything!
                     ws.send(JSON.stringify({ message: message }));
                     messageInput.value = '';
                 }
+            }
+
+            function newChat() {
+                messagesDiv.innerHTML = '';
+                messagesDiv.style.display = 'none';
+                welcomeScreen.style.display = 'flex';
+                chatContainer.classList.add('is-home');
             }
 
             messageInput.addEventListener('keypress', (e) => {

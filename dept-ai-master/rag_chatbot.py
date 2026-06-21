@@ -3185,45 +3185,86 @@ async def home():
       .welcome { padding: 20px 12px; }
       .welcome h1 { font-size: 18px; }
     }
+
+    /* ChatGPT-style Centered Layout Overrides */
+    .main.is-home {
+      justify-content: space-between;
+      height: 100vh;
+    }
+    .main.is-home #welcomeScreen {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      align-items: center;
+      padding-bottom: 24px;
+    }
+    .main.is-home .input-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      width: 100%;
+      padding-top: 0;
+      background: transparent;
+    }
+    .main.is-home .input-wrap {
+      max-width: 640px;
+      padding: 12px 14px 12px 20px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(139, 92, 246, 0.1);
+      border-color: rgba(139, 92, 246, 0.2);
+    }
+    .new-chat-btn {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border: 1px solid var(--border);
+      background: var(--bg-tertiary);
+      color: var(--text-primary);
+      border-radius: 18px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all var(--transition);
+      margin-right: 12px;
+    }
+    .new-chat-btn:hover {
+      background: var(--bg-hover);
+      border-color: rgba(139,92,246,.4);
+      box-shadow: 0 0 8px rgba(139,92,246,.15);
+    }
+    .new-chat-btn svg {
+      color: var(--text-secondary);
+    }
+    .input-wrap {
+      width: 100%;
+    }
+    @media (max-width: 768px) {
+      .new-chat-btn span { display: none; }
+      .new-chat-btn { padding: 6px; border-radius: 50%; margin-right: 4px; }
+    }
   </style>
 </head>
 <body>
 
 
 
-<div class="main">
+<div class="main is-home">
   <header class="header">
-    <span class="header-title">NBKR AI Assistant</span>
+    <span class="header-title">🎓 NBKR AI Assistant</span>
     <span class="header-badge">RAG + NLP + ML</span>
+    <button class="new-chat-btn" id="newChatBtn" onclick="newChat()" title="Start a new conversation">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:14px; height:14px;"><path d="M12 5v14M5 12h14"/></svg>
+      <span>New Chat</span>
+    </button>
     <div class="connection-dot" id="connDot" title="Disconnected"></div>
   </header>
 
   <div class="welcome" id="welcomeScreen">
-    <div class="welcome-icon">&#10024;</div>
-    <h1>How can I help you today?</h1>
-    <p>Your AI-powered assistant for NBKR's AI &amp; DS Department — timetables, faculty info, circulars, and more at your fingertips.</p>
-    <div class="quick-actions">
-      <div class="quick-action" onclick="quickSend('Show Section A timetable')">
-        <div class="qa-icon">&#128197;</div>
-        <div class="qa-title">View Timetable</div>
-        <div class="qa-sub">Section A, B, C schedules</div>
-      </div>
-      <div class="quick-action" onclick="quickSend('Who is the HOD?')">
-        <div class="qa-icon">&#128101;</div>
-        <div class="qa-title">Faculty Info</div>
-        <div class="qa-sub">HOD, professors, contacts</div>
-      </div>
-      <div class="quick-action" onclick="quickSend('How to check attendance?')">
-        <div class="qa-icon">&#128187;</div>
-        <div class="qa-title">Student Services</div>
-        <div class="qa-sub">Attendance, exams, results</div>
-      </div>
-      <div class="quick-action" onclick="quickSend('Tell me about the AI and DS department')">
-        <div class="qa-icon">&#129504;</div>
-        <div class="qa-title">About Department</div>
-        <div class="qa-sub">Courses, labs, events</div>
-      </div>
-    </div>
+    <div class="welcome-icon">🎓</div>
+    <h1>NBKR Department Chatbot</h1>
   </div>
 
   <div class="messages" id="msgs" style="display:none;"></div>
@@ -3235,7 +3276,6 @@ async def home():
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22 11 13 2 9z"/></svg>
       </button>
     </div>
-    <div class="input-hint">NBKR AI can make mistakes. Verify important information.</div>
   </div>
 </div>
 
@@ -3266,6 +3306,7 @@ async def home():
     welcome.style.display = 'none';
     msgs.style.display = 'flex';
     msgs.style.flexDirection = 'column';
+    document.querySelector('.main').classList.remove('is-home');
   }
 
   function addMsg(text, who) {
@@ -3402,7 +3443,9 @@ async def home():
 
   function newChat() {
     msgs.innerHTML = '';
-    msgs.style.display = 'none'; welcome.style.display = 'flex';
+    msgs.style.display = 'none';
+    welcome.style.display = 'flex';
+    document.querySelector('.main').classList.add('is-home');
   }
 
   inp.addEventListener('keydown', e => {
