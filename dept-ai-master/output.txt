@@ -1,0 +1,95 @@
+Connecting to chatbot websocket...
+Connected successfully!
+
+================================================================================
+USER: hello
+================================================================================
+BOT RESPONSE:
+
+<div class="bot-card info-card">
+  <div class="card-header">
+    <b>👋 Hello! I'm the NBKR AI &amp; DS Assistant</b>
+  </div>
+  <div class="table-container">
+    <table class="custom-table"><tbody><tr><td class="meta-label" style="white-space:nowrap;width:180px">📅 Timetables</td><td class="meta-value">Try: "2nd year Section A timetable"</td></tr><tr><td class="meta-label" style="white-space:nowrap;width:180px">👥 Faculty</td><td class="meta-value">Try: "Who is the HOD?"</td></tr><tr><td class="meta-label" style="white-space:nowrap;width:180px">📢 Circulars</td><td class="meta-value">Try: "Show circulars" or "fee notice"</td></tr><tr><td class="meta-label" style="white-space:nowrap;width:180px">💻 Services</td><td class="meta-value">Try: "How to check attendance?"</td></tr><tr><td class="meta-label" style="white-space:nowrap;width:180px">💡 Tip</td><td class="meta-value">I'll tell you honestly if I don't know something.</td></tr></tbody></table>
+  </div>
+</div>
+
+
+================================================================================
+USER: Who is the HOD of the AI & DS department?
+================================================================================
+BOT RESPONSE:
+
+<div class="bot-card faculty-detail-card">
+  <div class="card-header">
+    <b>👤 Dr Narayana Rao Appini</b>
+  </div>
+  <div class="card-body">
+    <div class="meta-row"><span class="meta-label">🏷️ Designation</span><span class="meta-value"><span class="badge badge-head-of-the-department">Head of the Department</span></span></div>
+    <div class="meta-row"><span class="meta-label">🔬 Specialization</span><span class="meta-value">Computer Networks, Machine Learning</span></div>
+    <div class="meta-row flex-col"><span class="meta-label">📚 Qualifications</span><div class="qual-list"><div class="qual-item">🎓 2017-Ph.D-JNTU Ananthapur</div><div class="qual-item">🎓 2008-M.Tech-JNTU Ananthapur</div><div class="qual-item">🎓 2005-B.Tech-Narayana Engineering College-Gudur</div></div></div>
+  </div>
+</div>
+
+
+================================================================================
+USER: show section a timetable
+================================================================================
+BOT RESPONSE:
+
+<div class="bot-card timetable-card">
+  <div class="card-header">
+    <b>📅 AI &amp; DS — 1st Year Section A Weekly Timetable</b>
+    <span class="card-subtitle">1st Year · 1st Semester</span>
+  </div>
+  <div class="table-container">
+    <table class="custom-table timetable-table">
+      <thead><tr><th>Time</th><th>Monday</th><th>Tuesday</th><th>Wednesday</th><th>Thursday</th><th>Friday</th><th>Saturday</th></tr></thead>
+      <tbody><tr><td class="time-slot">9-10</td><td class="subj-cell subj-lac">LAC (VHKR)</td><td class="subj-cell subj-ep">EP (BRK)</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="subj-cell subj-ep">EP (BRK)</td></tr><tr><td class="time-slot">10-11</td><td class="subj-cell subj-beee">BEEE (SDS)</td><td class="subj-cell subj-beee">BEEE (SDS)</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="subj-cell subj-beee">BEEE (SDS)</td></tr><tr><td class="time-slot">11-12</td><td class="subj-cell subj-ep">EP (BRK)</td><td class="subj-cell subj-lac">LAC (VHKR)</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="subj-cell subj-lac">LAC (VHKR)</td></tr><tr><td class="time-slot">9-12</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="subj-cell subj-introduction-to-programming">INTRODUCTION TO PROGRAMMING (VSRA)</td><td class="subj-cell subj-cp-lab">CP LAB (VSRA)</td><td class="subj-cell subj-ep-lab">EP-LAB (BRK, MDHB)</td><td class="empty-cell">—</td></tr><tr><td class="time-slot">1-2</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="subj-cell subj-ep">EP (BRK)</td><td class="subj-cell subj-lac">LAC (VHKR)</td><td class="empty-cell">—</td><td class="subj-cell subj-ngcs">NGCS (GM)</td></tr><tr><td class="time-slot">2-3</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="subj-cell subj-beee">BEEE (SDS)</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="empty-cell">—</td></tr><tr><td class="time-slot">1-4</td><td class="subj-cell subj-engineering-graphics">ENGINEERING GRAPHICS (PNK, AKYN, YSR)</td><td class="subj-cell subj-engineering-graphics">ENGINEERING GRAPHICS (RMB, AKYN, YSR)</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="subj-cell subj-introduction-to-programming">INTRODUCTION TO PROGRAMMING (VSRA)</td><td class="empty-cell">—</td></tr><tr><td class="time-slot">2-4</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="empty-cell">—</td><td class="subj-cell subj-eee-ws">EEE WS (TMS, NUSA, SDS)</td><td class="empty-cell">—</td><td class="subj-cell subj-it-ws">IT WS (SSB, USJ, CVVR)</td></tr></tbody>
+    </table>
+  </div>
+  <div class="timetable-legend"><b>LAC</b> = Linear Algebra & Calculus &nbsp;|&nbsp; <b>EP</b> = Engineering Physics &nbsp;|&nbsp; <b>BEEE</b> = Basic Electrical & Electronics Engineering &nbsp;|&nbsp; <b>CP LAB</b> = Computer Programming Lab &nbsp;|&nbsp; <b>EP-LAB</b> = Engineering Physics Lab &nbsp;|&nbsp; <b>EEE WS</b> = EEE Workshop &nbsp;|&nbsp; <b>IT WS</b> = IT Workshop &nbsp;|&nbsp; <b>NGCS</b> = NSS/NCC/Community Service &nbsp;|&nbsp; <b>ENGINEERING GRAPHICS</b> = Engineering Graphics &nbsp;|&nbsp; <b>INTRODUCTION TO PROGRAMMING</b> = Introduction to Programming &nbsp;|&nbsp; <b>AI</b> = Artificial Intelligence &nbsp;|&nbsp; <b>IDS</b> = Introduction to Data Science &nbsp;|&nbsp; <b>DL_CO</b> = Digital Logic & Computer Organization &nbsp;|&nbsp; <b>BE</b> = Business Environment &nbsp;|&nbsp; <b>SMDS</b> = Statistical Methods for Data Science &nbsp;|&nbsp; <b>DTI LAB</b> = Design Thinking & Innovation Lab &nbsp;|&nbsp; <b>IDS LAB</b> = Introduction to Data Science Lab &nbsp;|&nbsp; <b>AI LAB</b> = Artificial Intelligence Lab &nbsp;|&nbsp; <b>FULL STACK DEVELOPMENT LAB</b> = Full Stack Development Lab &nbsp;|&nbsp; <b>SNA</b> = Social Network Analysis &nbsp;|&nbsp; <b>BDA</b> = Big Data Analytics &nbsp;|&nbsp; <b>AIF</b> = AI for Finance &nbsp;|&nbsp; <b>NLP</b> = Natural Language Processing &nbsp;|&nbsp; <b>DL</b> = Deep Learning &nbsp;|&nbsp; <b>AWPS</b> = Academic Writing and Public Speaking &nbsp;|&nbsp; <b>TPW.IPR</b> = Technical Paper Writing & IPR &nbsp;|&nbsp; <b>DL LAB</b> = Deep Learning Lab &nbsp;|&nbsp; <b>BD and DV LAB</b> = Big Data & Data Visualization Lab &nbsp;|&nbsp; <b>WORKSHOP</b> = Workshop &nbsp;|&nbsp; <b>SOFT SKILLS LAB</b> = Soft Skills Lab</div>
+</div>
+
+
+================================================================================
+USER: Is there a hostel?
+================================================================================
+BOT RESPONSE:
+
+<div class="bot-card info-card">
+  <div class="card-header">
+    <b>ℹ️ Information</b>
+  </div>
+  <div class="table-container">
+    <table class="custom-table">
+      <tbody><tr style="background:#f8f9ff"><td style="border:1px solid #ddd;padding:9px 14px;font-size:13px;color:#333">hostel: Hostel facilities are available for both boys and girls at NBKR Institute</td></tr><tr style="background:#fff"><td style="border:1px solid #ddd;padding:9px 14px;font-size:13px;color:#333">Clean dining halls, Wi-Fi, recreation rooms, and 24/7 security are provided</td></tr><tr style="background:#f8f9ff"><td style="border:1px solid #ddd;padding:9px 14px;font-size:13px;color:#333">Contact the hostel warden's office for booking and fee details</td></tr></tbody>
+    </table>
+  </div>
+</div>
+
+
+================================================================================
+USER: show circular B-10/2026/01
+================================================================================
+BOT RESPONSE:
+
+<div class="bot-card notice-card">
+  <div class="card-header">
+    <b>📢 Notice: III & IV B.Tech I Semester Class Commencement AY 2026-27</b>
+    <span class="card-subtitle">No. B-10/2026/01 &nbsp;|&nbsp; 17-05-2026</span>
+  </div>
+  <div class="card-body">
+    <div class="notice-content">N.B.K.R. INSTITUTE OF SCIENCE & TECHNOLOGY (AUTONOMOUS). Notice No. B-10/2026/01, dated 17-05-2026. III & IV B.Tech. I Semester classes for the Academic Year 2026-27 commence from 06-07-2026. Tuition Fee in full, as applicable to MQ, NRTF, SPOT category students should be paid before the date of commencement of classes and complete the enrolment process for the respective classes. Early Bird Offer: Pay before 20-06-2026 and avail 10% discount on tuition fee. Payments towards Tuition Fee should be made by individually logging in to the following portal: https://portal.nbkrsac.in. Fund Transfer details should be submitted in the college office and receipts collected. Issued by the Principal, NBKR Institute of Science & Technology.</div>
+    <table class="custom-table notice-details-table">
+      <tbody>
+        <tr class="accent-row-yellow"><td>📅 Class Commencement</td><td>06-07-2026</td></tr><tr class="accent-row-green"><td>🎯 Early Bird Deadline</td><td>20-06-2026 — 10% discount</td></tr>
+        <tr class="accent-row-blue"><td>👥 Applicable To</td><td>III and IV B.Tech students (MQ, NRTF, SPOT category)</td></tr>
+        <tr><td>🌐 Payment Portal</td><td><a href="https://portal.nbkrsac.in" class="link-styled" target="_blank">https://portal.nbkrsac.in</a></td></tr>
+        <tr class="accent-row-blue"><td>📝 Action Required</td><td>Pay fee via portal &amp; submit fund transfer details at college office to collect receipt.</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
