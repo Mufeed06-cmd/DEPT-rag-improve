@@ -1,0 +1,76 @@
+{
+  "regulation": "R23",
+  "program": "B.Tech",
+  "department": "Artificial Intelligence and Data Science",
+  "category": "Laboratories",
+  "labs_by_year": [
+    {
+      "year": "I Year",
+      "semester": "Semester I",
+      "semester_code": "I-I",
+      "labs": [
+        {"name": "Engineering Physics Lab", "type": "Laboratory"},
+        {"name": "Computer Programming Lab", "type": "Laboratory"},
+        {"name": "Electrical & Electronics Engineering Workshop", "type": "Workshop"},
+        {"name": "IT Workshop", "type": "Workshop"}
+      ]
+    },
+    {
+      "year": "I Year",
+      "semester": "Semester II",
+      "semester_code": "I-II",
+      "labs": [
+        {"name": "Chemistry Lab", "type": "Laboratory"},
+        {"name": "Communicative English Lab", "type": "Laboratory"},
+        {"name": "Data Structures Lab", "type": "Laboratory"},
+        {"name": "Engineering Workshop", "type": "Workshop"}
+      ]
+    },
+    {
+      "year": "II Year",
+      "semester": "Semester I",
+      "semester_code": "II-I",
+      "labs": [
+        {"name": "Advanced Data Structures & Algorithm Analysis Lab", "type": "Laboratory"},
+        {"name": "Object Oriented Programming Through Java Lab", "short_name": "OOP Through Java Lab", "type": "Laboratory"}
+      ]
+    },
+    {
+      "year": "II Year",
+      "semester": "Semester II",
+      "semester_code": "II-II",
+      "labs": [
+        {"name": "Artificial Intelligence Lab", "type": "Laboratory"},
+        {"name": "Data Science Using Python Lab", "type": "Laboratory"},
+        {"name": "Full Stack Development - I", "type": "Skill Course"}
+      ]
+    },
+    {
+      "year": "III Year",
+      "semester": "Semester I",
+      "semester_code": "III-I",
+      "labs": [
+        {"name": "Data Warehousing & Mining Lab", "type": "Laboratory"},
+        {"name": "Machine Learning Lab", "type": "Laboratory"},
+        {"name": "Tinkering Lab", "type": "Laboratory"},
+        {"name": "Full Stack Development - II", "type": "Skill Course"}
+      ]
+    },
+    {
+      "year": "III Year",
+      "semester": "Semester II",
+      "semester_code": "III-II",
+      "labs": [
+        {"name": "Deep Learning Lab", "type": "Laboratory"},
+        {"name": "Big Data Analytics & Data Visualization Lab", "type": "Laboratory"}
+      ]
+    },
+    {
+      "year": "IV Year",
+      "semester": "Semester I",
+      "semester_code": "IV-I",
+      "labs": [],
+      "note": "No dedicated laboratory courses are listed. Students primarily focus on Project Work, Internship, Seminar, or Industry Training."
+    }
+  ]
+}

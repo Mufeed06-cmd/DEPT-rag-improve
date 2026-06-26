@@ -574,6 +574,19 @@ _TRAIN_DATA = [
     ("college information", "general"), ("department info", "general"),
     # college info
     ("about nbkr", "college"), ("nbkr college", "college"),
+    # labs R23
+    ("what labs are in 2nd year", "labs"), ("labs in iii-i", "labs"),
+    ("ai&ds labs", "labs"), ("all labs r23", "labs"),
+    ("which labs in sem 1", "labs"), ("labs in 1st year", "labs"),
+    ("cp lab semester", "labs"), ("ai lab which year", "labs"),
+    ("ml lab semester", "labs"), ("dl lab year", "labs"),
+    ("fsd lab", "labs"), ("oop java lab", "labs"),
+    ("data structure lab", "labs"), ("ds lab", "labs"),
+    ("bda lab", "labs"), ("tinkering lab", "labs"),
+    ("laboratory list", "labs"), ("practical subjects", "labs"),
+    ("workshops in 1st year", "labs"), ("skill courses", "labs"),
+    ("labs in 3-1", "labs"), ("labs in 2-2", "labs"),
+    ("4th year labs", "labs"), ("iv year labs", "labs"),
     ("nbkrist", "college"), ("naac grade", "college"),
     ("nba accreditation", "college"), ("college established", "college"),
     ("programs offered", "college"), ("campus facilities", "college"),
@@ -3131,6 +3144,18 @@ def classify_query_module(query: str, qa: QueryAnalysis) -> str:
     if any(w in q for w in department_keywords):
         return "department"
 
+    # 5a. Labs R23 Check — before college/general so "lab" queries are caught first
+    labs_kw = [
+        "lab", "labs", "laboratory", "laboratories", "workshop", "workshops",
+        "practical", "practicals", "skill course", "r23 lab", "aids lab",
+        "which labs", "what labs", "list of labs", "all labs",
+        "cp lab", "ep lab", "ds lab", "ai lab", "ml lab", "dl lab",
+        "oop lab", "java lab", "fsd", "dwdm", "bda lab", "tinkering",
+        "phy lab", "chem lab", "english lab", "adsa", "dsa lab",
+    ]
+    if any(w in q for w in labs_kw):
+        return "labs"
+
     # 5b. College Info Check
     college_kw = [
         "nbkr", "nbkrist", "college", "institute", "naac", "nba", "aicte", "ugc",
@@ -3268,6 +3293,13 @@ def get_response(query: str, conn_id: str = "default") -> str:
 
     if module == "college":
         return handle_college_query(query)
+
+    if module == "labs":
+        labs_reply = handle_labs_query(query)
+        if labs_reply is not None:
+            return labs_reply
+        log_failed_query(query, "labs", 0.0)
+        return "I couldn't find that information in the uploaded NBKR AI&DS R23 curriculum."
 
     if module == "faculty_timetable_list":
         return build_all_faculty_schedule_list_html()
@@ -3438,6 +3470,7 @@ async def lifespan(app: FastAPI):
     load_events()
     load_dept_info()
     load_college_info()
+    load_labs_r23()
     load_subjects_list()
     _load_student_dw()
     ok = initialize_rag()
@@ -5030,6 +5063,420 @@ def handle_college_query(query: str) -> str:
         return build_college_info_card("department")
     # Default: college overview
     return build_college_info_card("overview")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# R23 Labs Knowledge Base — load & respond
+# ─────────────────────────────────────────────────────────────────────────────
+_LABS_R23: Dict = {}
+
+def load_labs_r23():
+    global _LABS_R23
+    if os.path.exists("nbkr_labs_r23.json"):
+        with open("nbkr_labs_r23.json", "r", encoding="utf-8") as f:
+            _LABS_R23 = json.load(f)
+        total = sum(len(s.get("labs", [])) for s in _LABS_R23.get("labs_by_year", []))
+        print(f"✓ R23 Labs loaded: {total} labs across {len(_LABS_R23.get('labs_by_year',[]))} semesters")
+    else:
+        print("⚠ nbkr_labs_r23.json not found")
+
+
+# ── Abbreviation / typo alias map ────────────────────────────────────────────
+_LAB_ALIASES = {
+    # Physics
+    "phy lab": "Engineering Physics Lab",
+    "physics lab": "Engineering Physics Lab",
+    "ep lab": "Engineering Physics Lab",
+    # Programming / CP
+    "cp lab": "Computer Programming Lab",
+    "c programming lab": "Computer Programming Lab",
+    "programming lab": "Computer Programming Lab",
+    "comp prog lab": "Computer Programming Lab",
+    # EEE Workshop
+    "eee ws": "Electrical & Electronics Engineering Workshop",
+    "eee workshop": "Electrical & Electronics Engineering Workshop",
+    "electrical lab": "Electrical & Electronics Engineering Workshop",
+    # IT Workshop
+    "it ws": "IT Workshop",
+    "it workshop": "IT Workshop",
+    # Chemistry
+    "chem lab": "Chemistry Lab",
+    "chemistry lab": "Chemistry Lab",
+    # English
+    "english lab": "Communicative English Lab",
+    "comm english": "Communicative English Lab",
+    "communicative english": "Communicative English Lab",
+    # DS Lab
+    "ds lab": "Data Structures Lab",
+    "data structure lab": "Data Structures Lab",
+    "data strcture lab": "Data Structures Lab",
+    "dsa lab": "Data Structures Lab",
+    # Engineering Workshop
+    "eng workshop": "Engineering Workshop",
+    "engineering ws": "Engineering Workshop",
+    # Advanced DSA
+    "adsa lab": "Advanced Data Structures & Algorithm Analysis Lab",
+    "advanced ds lab": "Advanced Data Structures & Algorithm Analysis Lab",
+    "advanced dsa": "Advanced Data Structures & Algorithm Analysis Lab",
+    "algo lab": "Advanced Data Structures & Algorithm Analysis Lab",
+    # OOP Java
+    "oop lab": "Object Oriented Programming Through Java Lab",
+    "java lab": "Object Oriented Programming Through Java Lab",
+    "oop java": "Object Oriented Programming Through Java Lab",
+    "oops lab": "Object Oriented Programming Through Java Lab",
+    "oop through java": "Object Oriented Programming Through Java Lab",
+    # AI Lab
+    "ai lab": "Artificial Intelligence Lab",
+    "artificial intelligence lab": "Artificial Intelligence Lab",
+    # DS Python
+    "ds python lab": "Data Science Using Python Lab",
+    "data science lab": "Data Science Using Python Lab",
+    "python lab": "Data Science Using Python Lab",
+    # FSD I
+    "fsd 1": "Full Stack Development - I",
+    "fsd-1": "Full Stack Development - I",
+    "fsd i": "Full Stack Development - I",
+    "full stack 1": "Full Stack Development - I",
+    "full stack development 1": "Full Stack Development - I",
+    # DWM Lab
+    "dwdm lab": "Data Warehousing & Mining Lab",
+    "data mining lab": "Data Warehousing & Mining Lab",
+    "data warehousing lab": "Data Warehousing & Mining Lab",
+    "dm lab": "Data Warehousing & Mining Lab",
+    # ML Lab
+    "ml lab": "Machine Learning Lab",
+    "machine learning lab": "Machine Learning Lab",
+    # Tinkering
+    "tinkering lab": "Tinkering Lab",
+    # FSD II
+    "fsd 2": "Full Stack Development - II",
+    "fsd-2": "Full Stack Development - II",
+    "fsd ii": "Full Stack Development - II",
+    "full stack 2": "Full Stack Development - II",
+    "full stack development 2": "Full Stack Development - II",
+    # DL Lab
+    "dl lab": "Deep Learning Lab",
+    "deep learning lab": "Deep Learning Lab",
+    # BDA Lab
+    "bda lab": "Big Data Analytics & Data Visualization Lab",
+    "big data lab": "Big Data Analytics & Data Visualization Lab",
+    "data visualization lab": "Big Data Analytics & Data Visualization Lab",
+    "bd dv lab": "Big Data Analytics & Data Visualization Lab",
+}
+
+# ── Semester code normalization ───────────────────────────────────────────────
+_SEM_CODE_MAP = {
+    # I Year Sem I
+    "i-i": "I-I",   "1-1": "I-I",   "i year sem 1": "I-I",   "1st year sem 1": "I-I",
+    "1st year semester 1": "I-I", "i year semester i": "I-I", "sem 1 1st year": "I-I",
+    "first year first semester": "I-I", "first year sem 1": "I-I",
+    # I Year Sem II
+    "i-ii": "I-II", "1-2": "I-II",  "i year sem 2": "I-II",  "1st year sem 2": "I-II",
+    "1st year semester 2": "I-II", "first year second semester": "I-II", "first year sem 2": "I-II",
+    # II Year Sem I
+    "ii-i": "II-I", "2-1": "II-I",  "ii year sem 1": "II-I", "2nd year sem 1": "II-I",
+    "2nd year semester 1": "II-I", "second year sem 1": "II-I", "second year first semester": "II-I",
+    # II Year Sem II
+    "ii-ii": "II-II","2-2": "II-II", "ii year sem 2": "II-II","2nd year sem 2": "II-II",
+    "2nd year semester 2": "II-II", "second year sem 2": "II-II", "second year second semester": "II-II",
+    # III Year Sem I
+    "iii-i": "III-I","3-1": "III-I", "iii year sem 1": "III-I","3rd year sem 1": "III-I",
+    "3rd year semester 1": "III-I", "third year sem 1": "III-I", "third year first semester": "III-I",
+    # III Year Sem II
+    "iii-ii": "III-II","3-2": "III-II","iii year sem 2": "III-II","3rd year sem 2": "III-II",
+    "3rd year semester 2": "III-II", "third year sem 2": "III-II", "third year second semester": "III-II",
+    # IV Year Sem I
+    "iv-i": "IV-I", "4-1": "IV-I",  "iv year sem 1": "IV-I", "4th year sem 1": "IV-I",
+    "4th year semester 1": "IV-I", "fourth year sem 1": "IV-I", "fourth year first semester": "IV-I",
+}
+
+# ── Year keyword map ──────────────────────────────────────────────────────────
+_YEAR_MAP = {
+    "1st year": "I Year", "i year": "I Year",  "first year": "I Year",  "year 1": "I Year",  "1 year": "I Year",
+    "2nd year": "II Year","ii year": "II Year","second year": "II Year","year 2": "II Year", "2 year": "II Year",
+    "3rd year": "III Year","iii year": "III Year","third year": "III Year","year 3": "III Year","3 year": "III Year",
+    "4th year": "IV Year","iv year": "IV Year","fourth year": "IV Year","year 4": "IV Year", "4 year": "IV Year",
+}
+
+_TYPE_ICONS = {"Laboratory": "🧪", "Workshop": "🔧", "Skill Course": "💻"}
+_TYPE_COLORS = {
+    "Laboratory":   ("#e8f5e9", "#1b5e20"),
+    "Workshop":     ("#fff3e0", "#e65100"),
+    "Skill Course": ("#e3f2fd", "#0d47a1"),
+}
+
+
+def _labs_badge(lab: Dict) -> str:
+    t    = lab.get("type", "Laboratory")
+    icon = _TYPE_ICONS.get(t, "📋")
+    bg, fg = _TYPE_COLORS.get(t, ("#e8eaf6", "#1a237e"))
+    name = lab.get("name", "—")
+    sn   = lab.get("short_name", "")
+    display = f'{name} <span style="font-size:10px;opacity:.75">({sn})</span>' if sn else name
+    return (f'<div style="display:flex;align-items:center;gap:8px;'
+            f'padding:7px 12px;border-bottom:1px solid #f0f0f0">'
+            f'<span style="font-size:15px">{icon}</span>'
+            f'<div style="flex:1">'
+            f'<span style="font-size:13px;color:#222;font-weight:600">{display}</span>'
+            f'</div>'
+            f'<span style="background:{bg};color:{fg};padding:2px 8px;'
+            f'border-radius:8px;font-size:10px;font-weight:700;white-space:nowrap">{t}</span>'
+            f'</div>')
+
+
+def build_labs_card(sem_data: Dict) -> str:
+    """Build a card for a single semester's labs."""
+    year = sem_data.get("year", "—")
+    sem  = sem_data.get("semester", "—")
+    code = sem_data.get("semester_code", "—")
+    labs = sem_data.get("labs", [])
+    note = sem_data.get("note", "")
+
+    if not labs:
+        body = (f'<div style="padding:14px 16px;font-size:13px;color:#e65100;'
+                f'background:#fff8e1;border-radius:6px;margin:10px 14px">'
+                f'⚠️ {note}</div>')
+    else:
+        items = "".join(_labs_badge(l) for l in labs)
+        # Legend
+        types_present = list(dict.fromkeys(l.get("type","Laboratory") for l in labs))
+        legend = " ".join(
+            f'<span style="font-size:10px;margin-right:8px">'
+            f'{_TYPE_ICONS.get(t,"")} {t}</span>'
+            for t in types_present
+        )
+        body = (f'<div style="padding:6px 14px 4px;font-size:10.5px;color:#888">'
+                f'{legend}</div>' + items)
+
+    return f"""
+<div style="margin:8px 0;font-family:'Segoe UI',Arial,sans-serif;max-width:520px">
+  <div style="background:linear-gradient(135deg,#1a237e,#283593);color:#fff;
+              padding:10px 16px;border-radius:10px 10px 0 0;
+              display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:14px;font-weight:700">🔬 {year} — {sem}</span>
+    <span style="background:rgba(255,255,255,.2);padding:2px 9px;
+                 border-radius:8px;font-size:11px;font-weight:700">{code}</span>
+  </div>
+  <div style="background:#fff;border:1px solid #e5e7eb;border-top:none;
+              border-radius:0 0 10px 10px;overflow:hidden">
+    {body}
+  </div>
+  <div style="font-size:10.5px;color:#888;margin-top:4px;padding:0 4px">
+    R23 Regulation · AI&DS · B.Tech
+  </div>
+</div>"""
+
+
+def build_all_labs_card() -> str:
+    """Build a full year-wise grouped labs overview card."""
+    semesters = _LABS_R23.get("labs_by_year", [])
+    if not semesters:
+        return '<p style="font-family:Segoe UI,sans-serif;color:#c62828">Labs data not loaded.</p>'
+
+    # Group by year
+    from collections import OrderedDict
+    years: dict = OrderedDict()
+    for s in semesters:
+        yr = s.get("year","—")
+        years.setdefault(yr, []).append(s)
+
+    year_grads = {
+        "I Year":   "linear-gradient(135deg,#1a237e,#3949ab)",
+        "II Year":  "linear-gradient(135deg,#1b5e20,#388e3c)",
+        "III Year": "linear-gradient(135deg,#bf360c,#e64a19)",
+        "IV Year":  "linear-gradient(135deg,#4a148c,#7b1fa2)",
+    }
+
+    html = ""
+    for yr, sems in years.items():
+        grad = year_grads.get(yr, "linear-gradient(135deg,#2d3a6b,#4a5568)")
+        sem_blocks = ""
+        for s in sems:
+            code = s.get("semester_code","")
+            sem_name = s.get("semester","")
+            labs = s.get("labs", [])
+            note = s.get("note","")
+
+            if not labs:
+                content = (f'<div style="padding:6px 12px;font-size:12px;'
+                           f'color:#e65100;font-style:italic">'
+                           f'⚠️ {note}</div>')
+            else:
+                items = ""
+                for l in labs:
+                    t    = l.get("type","Laboratory")
+                    icon = _TYPE_ICONS.get(t,"📋")
+                    bg, fg = _TYPE_COLORS.get(t, ("#e8eaf6","#1a237e"))
+                    items += (
+                        f'<div style="display:flex;align-items:center;gap:7px;'
+                        f'padding:5px 12px;border-bottom:1px solid #f5f5f5">'
+                        f'<span>{icon}</span>'
+                        f'<span style="flex:1;font-size:12.5px;color:#222">{l.get("name","—")}</span>'
+                        f'<span style="background:{bg};color:{fg};padding:1px 7px;'
+                        f'border-radius:7px;font-size:10px;font-weight:700">{t}</span>'
+                        f'</div>'
+                    )
+                content = items
+
+            sem_blocks += f"""
+<div style="margin:6px 0">
+  <div style="padding:5px 12px;background:#f5f7ff;font-size:11px;
+              font-weight:700;color:#555;border-left:3px solid #3949ab">
+    {sem_name} &nbsp;·&nbsp; <span style="color:#1a237e">{code}</span>
+    &nbsp;·&nbsp; {len(labs)} lab(s)
+  </div>
+  {content}
+</div>"""
+
+        html += f"""
+<div style="margin-bottom:10px">
+  <div style="background:{grad};color:#fff;padding:9px 14px;
+              border-radius:8px 8px 0 0;font-size:13px;font-weight:700">
+    📅 {yr}
+  </div>
+  <div style="background:#fff;border:1px solid #ddd;border-top:none;
+              border-radius:0 0 8px 8px;overflow:hidden">
+    {sem_blocks}
+  </div>
+</div>"""
+
+    # Legend
+    legend = "".join(
+        f'<span style="margin-right:12px;font-size:11px">'
+        f'{icon} <b>{t}</b></span>'
+        for t, icon in _TYPE_ICONS.items()
+    )
+
+    return f"""
+<div style="margin:8px 0;font-family:'Segoe UI',Arial,sans-serif;max-width:520px">
+  <div style="background:linear-gradient(135deg,#2d3a6b,#4a5568);color:#fff;
+              padding:11px 16px;border-radius:10px 10px 0 0;
+              display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:14px;font-weight:700">🔬 AI&DS Labs — R23 Regulation</span>
+    <span style="font-size:10px;opacity:.8">B.Tech All Years</span>
+  </div>
+  <div style="background:#f9f9f9;border:1px solid #ddd;border-top:none;
+              padding:10px;border-radius:0 0 10px 10px">
+    {html}
+  </div>
+  <div style="margin-top:6px;padding:6px 12px;background:#f0f4ff;
+              border-radius:8px;font-size:11px;color:#555">
+    {legend}
+  </div>
+</div>"""
+
+
+def _normalize_sem_query(q: str) -> str:
+    """Return canonical semester code like 'II-I' or '' if not found."""
+    q = q.strip().lower()
+    # Direct match
+    if q in _SEM_CODE_MAP:
+        return _SEM_CODE_MAP[q]
+    # Substring match (longest first)
+    for alias in sorted(_SEM_CODE_MAP.keys(), key=len, reverse=True):
+        if alias in q:
+            return _SEM_CODE_MAP[alias]
+    return ""
+
+
+def _normalize_year_query(q: str) -> str:
+    """Return canonical year like 'II Year' or '' if not found."""
+    for alias in sorted(_YEAR_MAP.keys(), key=len, reverse=True):
+        if alias in q:
+            return _YEAR_MAP[alias]
+    return ""
+
+
+def handle_labs_query(query: str) -> Optional[str]:
+    """
+    Handle all lab-related queries with typo/abbreviation tolerance.
+    Returns HTML string or None if not a labs query.
+    """
+    q = query.lower().strip()
+
+    labs_kw = {
+        "lab", "labs", "laboratory", "laboratories", "workshop", "workshops",
+        "practical", "practicals", "skill course", "skill courses",
+        "hands on", "hands-on", "lab subjects", "lab list",
+        "which labs", "what labs", "list of labs", "all labs",
+        "r23 lab", "r23 labs", "aids lab", "ai&ds lab",
+        "lab in", "labs in", "labs for", "lab for",
+        "sem labs", "semester labs", "year labs",
+    }
+
+    # Also check alias map
+    alias_match = any(alias in q for alias in _LAB_ALIASES)
+
+    if not any(kw in q for kw in labs_kw) and not alias_match:
+        return None
+
+    semesters = _LABS_R23.get("labs_by_year", [])
+    if not semesters:
+        return '<p style="font-family:Segoe UI,sans-serif;color:#c62828">Labs data not loaded.</p>'
+
+    # ── 1. Specific lab name query (alias match) ──────────────────────────
+    if alias_match:
+        matched_name = next(
+            (full for alias, full in _LAB_ALIASES.items() if alias in q), None
+        )
+        if matched_name:
+            # Find which semester it belongs to
+            found = []
+            for s in semesters:
+                for l in s.get("labs", []):
+                    if matched_name.lower() in l.get("name","").lower():
+                        found.append((s, l))
+            if found:
+                s, l = found[0]
+                t    = l.get("type","Laboratory")
+                icon = _TYPE_ICONS.get(t,"📋")
+                bg, fg = _TYPE_COLORS.get(t, ("#e8eaf6","#1a237e"))
+                return f"""
+<div style="margin:8px 0;font-family:'Segoe UI',Arial,sans-serif;max-width:480px">
+  <div style="background:linear-gradient(135deg,#1a237e,#283593);color:#fff;
+              padding:10px 16px;border-radius:10px 10px 0 0">
+    <span style="font-size:14px;font-weight:700">{icon} {l.get('name','—')}</span>
+  </div>
+  <div style="background:#fff;border:1px solid #e5e7eb;border-top:none;
+              border-radius:0 0 10px 10px;padding:12px 16px">
+    <div style="margin-bottom:6px">
+      <span style="background:{bg};color:{fg};padding:3px 10px;
+                   border-radius:8px;font-size:12px;font-weight:700">{t}</span>
+    </div>
+    <div style="font-size:13px;color:#555">
+      📅 <b>{s.get('year','—')}</b> · {s.get('semester','—')}
+      &nbsp;(<b>{s.get('semester_code','—')}</b>)
+    </div>
+    <div style="font-size:11px;color:#888;margin-top:4px">R23 · AI&DS · B.Tech</div>
+  </div>
+</div>"""
+
+    # ── 2. Specific semester code query ──────────────────────────────────
+    sem_code = _normalize_sem_query(q)
+    if sem_code:
+        match = next((s for s in semesters if s.get("semester_code") == sem_code), None)
+        if match:
+            return build_labs_card(match)
+        return (f'<p style="font-family:Segoe UI,sans-serif;color:#c62828">'
+                f'No data found for semester <b>{sem_code}</b> in R23 AI&DS curriculum.</p>')
+
+    # ── 3. Year-only query → show both semesters of that year ─────────────
+    year_key = _normalize_year_query(q)
+    if year_key:
+        year_sems = [s for s in semesters if s.get("year") == year_key]
+        if year_sems:
+            cards = "".join(build_labs_card(s) for s in year_sems)
+            return f'<div>{cards}</div>'
+
+    # ── 4. "All labs" / general query → full overview ─────────────────────
+    all_kw = {"all lab", "all labs", "complete", "full list", "every lab",
+              "aids labs", "ai&ds labs", "r23 labs", "list of labs",
+              "lab list", "show labs", "lab subjects"}
+    if any(kw in q for kw in all_kw):
+        return build_all_labs_card()
+
+    # ── 5. Keyword-only "labs" with no year/sem → full overview ──────────
+    return build_all_labs_card()
 
 @app.get("/admin/deptinfo/get")
 async def admin_deptinfo_get(request: Request):
