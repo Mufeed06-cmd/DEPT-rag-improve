@@ -1,0 +1,5 @@
+dept-ai-master/
+docker/
+venv/
+.venv/
+chroma_db/
