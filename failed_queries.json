@@ -100,5 +100,17 @@
     "query": "department overview",
     "classified_module": "department",
     "top_score": 0.5783
+  },
+  {
+    "timestamp": "2026-06-29T14:23:06.857215",
+    "query": "\"What subjects are in 3rd semester?\"",
+    "classified_module": "unknown",
+    "top_score": 0.0
+  },
+  {
+    "timestamp": "2026-06-29T14:23:21.971019",
+    "query": "\"What are the bus fees?\"",
+    "classified_module": "bus_fee",
+    "top_score": 0.527
   }
 ]
