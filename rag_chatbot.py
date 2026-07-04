@@ -493,6 +493,7 @@ doc_embeddings    = None   # precomputed document embeddings matrix
 knowledge_docs: List[Dict] = []
 bm25_index        = None   # BM25Okapi index over knowledge_docs
 bm25_tokenized_corpus: List[List[str]] = []
+reranker_model    = None   # CrossEncoder model for reranking top candidates
 nlp               = None   # spaCy
 ml_classifier     = None   # TF-IDF + Naive Bayes pipeline
 ml_vectorizer     = None
@@ -1811,10 +1812,21 @@ def initialize_rag() -> bool:
         bm25_tokenized_corpus = [re.findall(r'\w+', t.lower()) for t in texts]
         bm25_index = BM25Okapi(bm25_tokenized_corpus)
         print(f"✓ BM25 index built ({len(bm25_tokenized_corpus)} documents)")
-
-        return True
     except Exception as e:
         print(f"⚠ FAISS failed: {e}"); return False
+
+    # Load cross-encoder reranker (re-scores top candidates using query+doc
+    # together, catching relevance nuances pure vector/BM25 scoring misses)
+    global reranker_model
+    try:
+        from sentence_transformers import CrossEncoder
+        reranker_model = CrossEncoder("cross-encoder/ms-marco-MiniLM-L-6-v2")
+        print("✓ Reranker model loaded")
+    except Exception as e:
+        print(f"⚠ Reranker failed to load, continuing without it: {e}")
+        reranker_model = None
+
+    return True
 
 
 def retrieve(qa: QueryAnalysis, top_k: int = TOP_K) -> List[Tuple[Dict, float]]:
@@ -1879,7 +1891,30 @@ def hybrid_retrieve(qa: QueryAnalysis, top_k: int = TOP_K, alpha: float = 0.5) -
     ]
     combined.sort(key=lambda x: x[1], reverse=True)
 
-    return [(knowledge_docs[i], score) for i, score in combined[:top_k]]
+    # No reranker available — return hybrid-scored results as before
+    if reranker_model is None:
+        return [(knowledge_docs[i], score) for i, score in combined[:top_k]]
+
+    # Rerank only the top candidate pool (cheap: reranking 10 docs, not 256)
+    candidate_pool = combined[:10]
+    pairs = [(search_text, knowledge_docs[i]["text"]) for i, _ in candidate_pool]
+    rerank_scores = reranker_model.predict(pairs)
+
+    # Use rerank_scores ONLY to decide the new ORDER. Keep pairing each
+    # candidate with its ORIGINAL hybrid score (candidate_pool[j][1]), not
+    # the reranker's raw score, so existing confidence thresholds elsewhere
+    # in the codebase keep working unchanged.
+    order = sorted(
+        range(len(candidate_pool)),
+        key=lambda j: float(rerank_scores[j]),
+        reverse=True
+    )
+    reranked = [
+        (candidate_pool[j][0], candidate_pool[j][1])  # (doc_index, original_hybrid_score)
+        for j in order
+    ]
+
+    return [(knowledge_docs[i], score) for i, score in reranked[:top_k]]
 
 
 

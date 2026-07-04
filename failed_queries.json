@@ -172,5 +172,29 @@
     "query": "kdjhfkjshdkfjh random gibberish query",
     "classified_module": "unknown",
     "top_score": 0.2861
+  },
+  {
+    "timestamp": "2026-07-04T16:22:21.518025",
+    "query": "bus fee for gate stop",
+    "classified_module": "bus_fee",
+    "top_score": 0.6704
+  },
+  {
+    "timestamp": "2026-07-04T16:24:53.801918",
+    "query": "kdjhfkjshdkfjh random gibberish query",
+    "classified_module": "unknown",
+    "top_score": 0.0001
+  },
+  {
+    "timestamp": "2026-07-04T16:24:53.831210",
+    "query": "bus fee for gate stop",
+    "classified_module": "bus_fee",
+    "top_score": 0.6704
+  },
+  {
+    "timestamp": "2026-07-04T16:27:29.904896",
+    "query": "kdjhfkjshdkfjh random gibberish query",
+    "classified_module": "unknown",
+    "top_score": 0.2592
   }
 ]
