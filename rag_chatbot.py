@@ -493,6 +493,19 @@ doc_embeddings    = None   # precomputed document embeddings matrix
 knowledge_docs: List[Dict] = []
 bm25_index        = None   # BM25Okapi index over knowledge_docs
 bm25_tokenized_corpus: List[List[str]] = []
+
+_BM25_STOPWORDS = {
+    "the","is","are","a","an","of","to","in","on","for","and","or",
+    "tell","me","about","what","how","can","you","do","does","did",
+    "please","i","my","it","this","that","was","were","be","been",
+    "with","at","by","from","as","if","will","would","should","could"
+}
+
+def _bm25_tokenize(text: str) -> List[str]:
+    """Tokenize for BM25, stripping common filler words that would
+    otherwise inflate matches on off-topic queries."""
+    tokens = re.findall(r'\w+', text.lower())
+    return [t for t in tokens if t not in _BM25_STOPWORDS]
 reranker_model    = None   # CrossEncoder model for reranking top candidates
 nlp               = None   # spaCy
 ml_classifier     = None   # TF-IDF + Naive Bayes pipeline
@@ -1698,6 +1711,228 @@ def load_knowledge_base() -> List[Dict]:
         except Exception as e:
             print(f"⚠ Error loading department info: {e}")
 
+    # Load college/facilities info into the searchable knowledge base
+    # (previously only reachable via the hardcoded college_kw keyword list —
+    # this makes it findable by hybrid search too, as a safety net)
+    if os.path.exists("nbkr_college_info.json"):
+        try:
+            with open("nbkr_college_info.json", "r", encoding="utf-8") as f:
+                data = json.load(f)
+
+            # 1. "college"
+            coll = data.get("college", {})
+            if "name" in coll:
+                docs.append({
+                    "text": f"college name institute: {coll['name']}. What is the name of the college?",
+                    "display_text": f"College Name:\n{coll['name']}",
+                    "type": "college",
+                    "key": "name"
+                })
+            if "short_name" in coll:
+                docs.append({
+                    "text": f"college short name abbreviation: {coll['short_name']}. What is the short name of the college?",
+                    "display_text": f"College Short Name:\n{coll['short_name']}",
+                    "type": "college",
+                    "key": "short_name"
+                })
+            if "established" in coll:
+                docs.append({
+                    "text": f"college establishment year established: {coll['established']}. When was the college established?",
+                    "display_text": f"Established:\n{coll['established']}",
+                    "type": "college",
+                    "key": "established"
+                })
+            if "location" in coll:
+                loc = coll["location"]
+                loc_str = f"{loc.get('village', '')}, {loc.get('district', '')}, {loc.get('state', '')}, {loc.get('country', '')}"
+                docs.append({
+                    "text": f"college location village district state country: {loc_str}. Where is the college located?",
+                    "display_text": f"Location:\n{loc_str}",
+                    "type": "college",
+                    "key": "location"
+                })
+            if "affiliation" in coll:
+                docs.append({
+                    "text": f"college affiliation university: {coll['affiliation']}. What is the college affiliation?",
+                    "display_text": f"Affiliation:\n{coll['affiliation']}",
+                    "type": "college",
+                    "key": "affiliation"
+                })
+            if "autonomous_status" in coll:
+                docs.append({
+                    "text": f"college autonomous status: {coll['autonomous_status']}. Is the college autonomous?",
+                    "display_text": f"Autonomous Status:\n{'Yes' if coll['autonomous_status'] else 'No'}",
+                    "type": "college",
+                    "key": "autonomous_status"
+                })
+            if "approvals" in coll:
+                appr = coll["approvals"]
+                appr_list = [f"{k.upper()}: {'Yes' if v is True else v}" for k, v in appr.items()]
+                appr_str = ", ".join(appr_list)
+                docs.append({
+                    "text": f"college approvals recognition aicte ugc: {appr_str}. What are the college approvals?",
+                    "display_text": f"Approvals & Recognitions:\n{appr_str}",
+                    "type": "college",
+                    "key": "approvals"
+                })
+            if "accreditation" in coll:
+                acc = coll["accreditation"]
+                naac = acc.get("naac", {})
+                nba = acc.get("nba", {})
+                acc_str = f"NAAC Grade: {naac.get('grade', '')}, NBA Status: {nba.get('status', '')} ({nba.get('type', '')} for {nba.get('programs', '')})"
+                docs.append({
+                    "text": f"college accreditation naac grade nba status: {acc_str}. What are the accreditations of the college?",
+                    "display_text": f"Accreditation:\n{acc_str}",
+                    "type": "college",
+                    "key": "accreditation"
+                })
+            if "vision" in coll:
+                docs.append({
+                    "text": f"college vision statement: {coll['vision']}. What is the vision of the college?",
+                    "display_text": f"College Vision:\n{coll['vision']}",
+                    "type": "college",
+                    "key": "vision"
+                })
+
+            # 2. "programs_offered"
+            prog = data.get("programs_offered", {})
+            for btech in prog.get("undergraduate", []):
+                docs.append({
+                    "text": f"college program course undergraduate btech: {btech}. Is there {btech} offered?",
+                    "display_text": f"Undergraduate Program:\n{btech}",
+                    "type": "college",
+                    "key": "undergraduate_program"
+                })
+            for pg in prog.get("postgraduate", []):
+                docs.append({
+                    "text": f"college program course postgraduate pg: {pg}. Is there {pg} offered?",
+                    "display_text": f"Postgraduate Program:\n{pg}",
+                    "type": "college",
+                    "key": "postgraduate_program"
+                })
+
+            # 3. "campus"
+            camp = data.get("campus", {})
+            if "campus_area" in camp:
+                docs.append({
+                    "text": f"college campus area size: {camp['campus_area']}. How big is the campus?",
+                    "display_text": f"Campus Area:\n{camp['campus_area']}",
+                    "type": "college",
+                    "key": "campus_area"
+                })
+            for facility in camp.get("facilities", []):
+                docs.append({
+                    "text": f"college campus facility: {facility}. Is there a {facility} on campus? Do you have a {facility}?",
+                    "display_text": f"{facility}",
+                    "type": "college",
+                    "key": "facility"
+                })
+
+            # 4. "student_chapters"
+            for chap in data.get("student_chapters", []):
+                docs.append({
+                    "text": f"college student chapter club activity: {chap}. Is there a {chap} chapter on campus?",
+                    "display_text": f"Student Chapter / Club:\n{chap}",
+                    "type": "college",
+                    "key": "student_chapter"
+                })
+
+            # 5. "placements"
+            plac = data.get("placements", {})
+            for rec in plac.get("major_recruiters", []):
+                docs.append({
+                    "text": f"college placement major recruiter company hiring: {rec}. Does {rec} recruit from college?",
+                    "display_text": f"Major Recruiter:\n{rec}",
+                    "type": "college",
+                    "key": "recruiter"
+                })
+            for focus in plac.get("placement_focus", []):
+                docs.append({
+                    "text": f"college placement training focus skill: {focus}. What is the placement training focus?",
+                    "display_text": f"Placement Focus:\n{focus}",
+                    "type": "college",
+                    "key": "placement_focus"
+                })
+
+            # 6. "department"
+            dept = data.get("department", {})
+            if "name" in dept:
+                docs.append({
+                    "text": f"department name: {dept['name']}. What is the department name?",
+                    "display_text": f"Department Name:\n{dept['name']}",
+                    "type": "college",
+                    "key": "dept_name"
+                })
+            if "short_name" in dept:
+                docs.append({
+                    "text": f"department short name: {dept['short_name']}. What is the department short name?",
+                    "display_text": f"Department Short Name:\n{dept['short_name']}",
+                    "type": "college",
+                    "key": "dept_short_name"
+                })
+            if "overview" in dept:
+                docs.append({
+                    "text": f"department overview info description: {dept['overview']}. What is the department about?",
+                    "display_text": f"Department Overview:\n{dept['overview']}",
+                    "type": "college",
+                    "key": "dept_overview"
+                })
+            if "approved_intake" in dept:
+                docs.append({
+                    "text": f"department approved intake seats: {dept['approved_intake']}. What is the intake of the department?",
+                    "display_text": f"Approved Intake:\n{dept['approved_intake']} seats",
+                    "type": "college",
+                    "key": "dept_approved_intake"
+                })
+            for obj in dept.get("objectives", []):
+                docs.append({
+                    "text": f"department objective goal: {obj}. What is the objective of the department?",
+                    "display_text": f"Department Objective:\n{obj}",
+                    "type": "college",
+                    "key": "dept_objective"
+                })
+            for sub in dept.get("subjects", []):
+                docs.append({
+                    "text": f"department subject course: {sub}. Do we study {sub} in the department?",
+                    "display_text": f"Department Subject:\n{sub}",
+                    "type": "college",
+                    "key": "dept_subject"
+                })
+            for lab in dept.get("laboratories", []):
+                docs.append({
+                    "text": f"department laboratory lab: {lab}. Is there a {lab} in the department?",
+                    "display_text": f"Department Laboratory:\n{lab}",
+                    "type": "college",
+                    "key": "dept_laboratory"
+                })
+            for opp in dept.get("career_opportunities", []):
+                docs.append({
+                    "text": f"department career opportunity job role: {opp}. What career opportunities are there?",
+                    "display_text": f"Career Opportunity:\n{opp}",
+                    "type": "college",
+                    "key": "dept_career_opportunity"
+                })
+            for skill in dept.get("recommended_skills", []):
+                docs.append({
+                    "text": f"department recommended skill technology: {skill}. What skills are recommended?",
+                    "display_text": f"Recommended Skill:\n{skill}",
+                    "type": "college",
+                    "key": "dept_recommended_skill"
+                })
+
+            # 7. "events_and_activities"
+            for ev in data.get("events_and_activities", []):
+                docs.append({
+                    "text": f"college event activity technical symposium workshop: {ev}. What events are held?",
+                    "display_text": f"Event / Activity:\n{ev}",
+                    "type": "college",
+                    "key": "event_activity"
+                })
+
+            print("✓ Loaded college info into knowledge base")
+        except Exception as e:
+            print(f"⚠ Error loading college info: {e}")
+
     # Load bus fees
     if os.path.exists("nbkr_bus_fees.json"):
         try:
@@ -1809,7 +2044,7 @@ def initialize_rag() -> bool:
         # Build BM25 keyword index alongside the vector index
         global bm25_index, bm25_tokenized_corpus
         from rank_bm25 import BM25Okapi
-        bm25_tokenized_corpus = [re.findall(r'\w+', t.lower()) for t in texts]
+        bm25_tokenized_corpus = [_bm25_tokenize(t) for t in texts]
         bm25_index = BM25Okapi(bm25_tokenized_corpus)
         print(f"✓ BM25 index built ({len(bm25_tokenized_corpus)} documents)")
     except Exception as e:
@@ -1873,7 +2108,7 @@ def hybrid_retrieve(qa: QueryAnalysis, top_k: int = TOP_K, alpha: float = 0.5) -
         return retrieve(qa, top_k)
 
     search_text = qa.expanded if qa.expanded.strip() else qa.original
-    query_tokens = re.findall(r'\w+', search_text.lower())
+    query_tokens = _bm25_tokenize(search_text)
 
     # BM25 scores across ALL docs, normalized to 0-1
     bm25_scores = bm25_index.get_scores(query_tokens)
