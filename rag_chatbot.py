@@ -1786,7 +1786,7 @@ def initialize_rag() -> bool:
     print("🔄 Initialising RAG engine …")
     try:
         from sentence_transformers import SentenceTransformer
-        embeddings_model = SentenceTransformer("all-MiniLM-L6-v2")
+        embeddings_model = SentenceTransformer("BAAI/bge-small-en-v1.5")
         print("✓ Sentence-transformer model loaded")
     except Exception as e:
         print(f"⚠ Embedding model failed: {e}"); return False
@@ -1821,7 +1821,8 @@ def retrieve(qa: QueryAnalysis, top_k: int = TOP_K) -> List[Tuple[Dict, float]]:
     if embeddings_model is None or faiss_index is None:
         return []
     search_text = qa.expanded if qa.expanded.strip() else qa.original
-    q_vec = embeddings_model.encode([search_text], normalize_embeddings=True).astype("float32")
+    bge_query = "Represent this sentence for searching relevant passages: " + search_text
+    q_vec = embeddings_model.encode([bge_query], normalize_embeddings=True).astype("float32")
     scores, indices = faiss_index.search(q_vec, top_k)
     return [(knowledge_docs[idx], float(score))
             for score, idx in zip(scores[0], indices[0]) if idx < len(knowledge_docs)]
@@ -1835,7 +1836,8 @@ def retrieve_filtered(qa: QueryAnalysis, doc_type: str) -> List[Tuple[Dict, floa
         return []
     
     search_text = qa.expanded if qa.expanded.strip() else qa.original
-    q_vec = embeddings_model.encode([search_text], normalize_embeddings=True)[0]
+    bge_query = "Represent this sentence for searching relevant passages: " + search_text
+    q_vec = embeddings_model.encode([bge_query], normalize_embeddings=True)[0]
     
     filtered_embs = doc_embeddings[matching_indices]
     scores = np.dot(filtered_embs, q_vec)
@@ -1867,7 +1869,8 @@ def hybrid_retrieve(qa: QueryAnalysis, top_k: int = TOP_K, alpha: float = 0.5) -
     bm25_scores_norm = [s / max_bm25 for s in bm25_scores]
 
     # Vector scores across ALL docs (reuse doc_embeddings, already normalized)
-    q_vec = embeddings_model.encode([search_text], normalize_embeddings=True)[0]
+    bge_query = "Represent this sentence for searching relevant passages: " + search_text
+    q_vec = embeddings_model.encode([bge_query], normalize_embeddings=True)[0]
     vector_scores = doc_embeddings @ q_vec  # cosine similarity, already 0-1 range
 
     combined = [

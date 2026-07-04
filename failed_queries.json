@@ -148,5 +148,29 @@
     "query": "faculty time table",
     "classified_module": "timetable",
     "top_score": 0.0
+  },
+  {
+    "timestamp": "2026-07-04T15:57:54.669791",
+    "query": "kdjhfkjshdkfjh random gibberish query",
+    "classified_module": "unknown",
+    "top_score": 0.1473
+  },
+  {
+    "timestamp": "2026-07-04T15:59:00.686777",
+    "query": "bus fee for gate stop",
+    "classified_module": "bus_fee",
+    "top_score": 0.5008
+  },
+  {
+    "timestamp": "2026-07-04T15:59:00.705219",
+    "query": "kdjhfkjshdkfjh random gibberish query",
+    "classified_module": "unknown",
+    "top_score": 0.1473
+  },
+  {
+    "timestamp": "2026-07-04T16:12:34.447968",
+    "query": "kdjhfkjshdkfjh random gibberish query",
+    "classified_module": "unknown",
+    "top_score": 0.2861
   }
 ]
