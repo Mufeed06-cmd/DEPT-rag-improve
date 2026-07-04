@@ -1,5 +1,104 @@
 import json
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Canonical slot order (matches rag_chatbot.py's _FAC_SLOT_ORDER)
+# The renderer iterates exactly these keys in this order.
+# ─────────────────────────────────────────────────────────────────────────────
+_SLOTS = [
+    "9:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-1:00",
+    "1:00-2:00",  "2:00-3:00",  "3:00-4:00",  "4:00-5:00",
+]
+# Lunch-column marker for each day (used by the HTML renderer)
+_LUNCH_MARKER = {
+    "Mon": "L", "Tue": "U", "Wed": "N",
+    "Thu": "C", "Fri": "H", "Sat": "BREAK",
+}
+
+def build_slot_dict(day_slots):
+    """
+    Convert a list of timetable slot entries (list-of-dicts format from the
+    faculty_list source below) into the flat Mon/slot→string format expected
+    by rag_chatbot.py's build_faculty_timetable_html renderer.
+
+    Input entry shape:
+        {"time": "9:00-11:00", "subject": "DL LAB", "class": "III-II AI_DS-A", "type": "lab"}
+
+    Output:
+        {"9:00-10:00": "DL LAB (III-II AI_DS-A)", "10:00-11:00": "DL LAB (III-II AI_DS-A)", ...}
+
+    Rules:
+    - A multi-hour entry like "9:00-11:00" is expanded into every
+      constituent 1-hour slot so the renderer gets a value for each column.
+    - The 12:00-1:00 slot is always set to the day's lunch marker (L/U/N/C/H/BREAK).
+    - Empty (free) slots default to "".
+    """
+    # Build a mapping: slot_key → display_string for each hour-slot in the day
+    result = {s: "" for s in _SLOTS}
+
+    for entry in day_slots:
+        t      = entry.get("time", "")
+        subj   = entry.get("subject", "")
+        cls    = entry.get("class", "")
+        typ    = entry.get("type", "")
+
+        if not t:
+            continue
+
+        # Determine display value
+        if typ == "break" or subj.upper() in {"LUNCH", "BREAK"}:
+            # Will be filled in by the lunch-marker pass below
+            continue
+
+        display = f"{subj} ({cls})" if cls else subj
+
+        # Expand multi-hour span into individual 1-hour slot keys
+        parts = t.split("-")
+        if len(parts) == 2:
+            try:
+                start_h = int(parts[0].split(":")[0])
+                end_h   = int(parts[1].split(":")[0])
+            except ValueError:
+                # Fallback: just try the slot key as-is
+                if t in result:
+                    result[t] = display
+                continue
+            for h in range(start_h, end_h):
+                slot_key = f"{h}:00-{h+1}:00"
+                if slot_key in result and slot_key != "12:00-1:00":
+                    result[slot_key] = display
+        else:
+            if t in result and t != "12:00-1:00":
+                result[t] = display
+
+    return result
+
+
+def to_flat_timetable(timetable_full, day_abbr_map=None):
+    """
+    Convert a full-day-name keyed list-of-dicts timetable into the
+    flat short-key dict-of-dicts format.
+
+    day_abbr_map: {"Monday":"Mon", "Tuesday":"Tue", ...}  (default provided)
+    """
+    if day_abbr_map is None:
+        day_abbr_map = {
+            "Monday": "Mon", "Tuesday": "Tue", "Wednesday": "Wed",
+            "Thursday": "Thu", "Friday": "Fri", "Saturday": "Sat",
+        }
+    flat = {}
+    for full_day, abbr in day_abbr_map.items():
+        day_entries = timetable_full.get(full_day, [])
+        slot_dict = build_slot_dict(day_entries)
+        # Set the lunch/break marker for the 12:00-1:00 column
+        slot_dict["12:00-1:00"] = _LUNCH_MARKER[abbr]
+        flat[abbr] = slot_dict
+    return flat
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Source faculty list — timetable in list-of-dicts format (human-friendly)
+# build_faculty.py converts this to the flat slot→string format on write.
+# ─────────────────────────────────────────────────────────────────────────────
 faculty_list = [
   {
     "name": "Dr. Narayana Rao Appini",
@@ -9,9 +108,9 @@ faculty_list = [
     "phone": "9441057392 / 8297265199",
     "email": "narayanaraoappini@gmail.com, narayanaraoappini@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"AI LAB","class":"II-II AI_DS-B","type":"lab"}],
-      "Tuesday": [{"time":"9:00-11:00","subject":"BD and DV LAB","class":"III-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
-      "Wednesday": [{"time":"11:00-12:00","subject":"AI","class":"II-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"AI LAB","class":"II-II AI_DS-A","type":"lab"}],
+      "Monday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"AI LAB","class":"II-II AI_DS-B","type":"lab"}],
+      "Tuesday": [{"time":"9:00-12:00","subject":"BD and DV LAB","class":"III-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
+      "Wednesday": [{"time":"11:00-12:00","subject":"AI","class":"II-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"AI LAB","class":"II-II AI_DS-A","type":"lab"}],
       "Thursday": [{"time":"9:00-12:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
       "Friday": [{"time":"11:00-12:00","subject":"AI","class":"II-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"3:00-4:00","subject":"TPW.IPR","class":"III-II AI_DS-A","type":"theory"}],
       "Saturday": [{"time":"9:00-10:00","subject":"TPW.IPR","class":"III-II AI_DS-A","type":"theory"},{"time":"11:00-12:00","subject":"AI","class":"II-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}]
@@ -25,9 +124,9 @@ faculty_list = [
     "phone": "9246423635",
     "email": "mns9@yahoo.com, mns9@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"11:00-12:00","subject":"SNA","class":"III-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"CNS LAB","class":"III-II IT","type":"lab"}],
+      "Monday": [{"time":"11:00-12:00","subject":"SNA","class":"III-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"CNS LAB","class":"III-II IT","type":"lab"}],
       "Tuesday": [{"time":"9:00-10:00","subject":"SNA","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"IDS LAB","class":"II-II AI_DS-A","type":"lab"},{"time":"3:00-4:00","subject":"SNA","class":"III-II AI_DS-B","type":"theory"}],
-      "Wednesday": [{"time":"9:00-11:00","subject":"IDS LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"SNA","class":"III-II AI_DS-A","type":"theory"}],
+      "Wednesday": [{"time":"9:00-12:00","subject":"IDS LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"SNA","class":"III-II AI_DS-A","type":"theory"}],
       "Thursday": [{"time":"10:00-11:00","subject":"SNA","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"SNA","class":"III-II AI_DS-B","type":"theory"}],
       "Friday": [{"time":"10:00-11:00","subject":"SNA","class":"III-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"SNA","class":"III-II AI_DS-A","type":"theory"}],
       "Saturday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}]
@@ -41,8 +140,8 @@ faculty_list = [
     "phone": "9440836909",
     "email": "veera_raghavulu@rediff.com, veera_raghavulu@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"9:00-11:00","subject":"DL LAB","class":"III-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"CNS LAB","class":"III-II IT","type":"lab"}],
-      "Tuesday": [{"time":"9:00-11:00","subject":"DTI LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"CNS","class":"III-II IT","type":"theory"}],
+      "Monday": [{"time":"9:00-12:00","subject":"DL LAB","class":"III-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"CNS LAB","class":"III-II IT","type":"lab"}],
+      "Tuesday": [{"time":"9:00-12:00","subject":"DTI LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"CNS","class":"III-II IT","type":"theory"}],
       "Wednesday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"CNS","class":"III-II IT","type":"theory"}],
       "Thursday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"3:00-4:00","subject":"CNS","class":"III-II IT","type":"theory"}],
       "Friday": [{"time":"10:00-11:00","subject":"CNS","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"TPW.IPR","class":"III-II AI_DS-B","type":"theory"}],
@@ -57,9 +156,9 @@ faculty_list = [
     "phone": "9848715781",
     "email": "mahendraniyogi@gmail.com, mahendrasharma@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"9:00-11:00","subject":"DTI LAB","class":"II-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"AIF","class":"III-II AI_DS-A","type":"theory"}],
-      "Tuesday": [{"time":"9:00-11:00","subject":"DTI LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"AIF","class":"III-II AI_DS-B","type":"theory"}],
-      "Wednesday": [{"time":"10:00-11:00","subject":"AIF","class":"III-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"DL LAB","class":"III-II AI_DS-B","type":"lab"}],
+      "Monday": [{"time":"9:00-12:00","subject":"DTI LAB","class":"II-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"AIF","class":"III-II AI_DS-A","type":"theory"}],
+      "Tuesday": [{"time":"9:00-12:00","subject":"DTI LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"AIF","class":"III-II AI_DS-B","type":"theory"}],
+      "Wednesday": [{"time":"10:00-11:00","subject":"AIF","class":"III-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"DL LAB","class":"III-II AI_DS-B","type":"lab"}],
       "Thursday": [{"time":"9:00-10:00","subject":"AIF","class":"III-II AI_DS-A","type":"theory"},{"time":"11:00-12:00","subject":"AIF","class":"III-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"AIF","class":"III-II AI_DS-A","type":"theory"}],
       "Friday": [{"time":"10:00-11:00","subject":"AIF","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"AIF","class":"III-II AI_DS-B","type":"theory"}],
       "Saturday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}]
@@ -73,10 +172,10 @@ faculty_list = [
     "phone": "9573800895",
     "email": "mamatha.sekireddy@gmail.com, mamatha45@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"9:00-11:00","subject":"PROJECT","class":"IV-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"IDS","class":"II-II AI_DS-A","type":"theory"}],
-      "Tuesday": [{"time":"10:00-11:00","subject":"IDS","class":"II-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"IDS LAB","class":"II-II AI_DS-A","type":"lab"}],
-      "Wednesday": [{"time":"9:00-11:00","subject":"IDS LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"IDS","class":"II-II AI_DS-B","type":"theory"}],
-      "Thursday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-B","type":"lab"}],
+      "Monday": [{"time":"9:00-12:00","subject":"PROJECT","class":"IV-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"IDS","class":"II-II AI_DS-A","type":"theory"}],
+      "Tuesday": [{"time":"10:00-11:00","subject":"IDS","class":"II-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"IDS LAB","class":"II-II AI_DS-A","type":"lab"}],
+      "Wednesday": [{"time":"9:00-12:00","subject":"IDS LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"IDS","class":"II-II AI_DS-B","type":"theory"}],
+      "Thursday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-B","type":"lab"}],
       "Friday": [{"time":"10:00-11:00","subject":"IDS","class":"II-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
       "Saturday": [{"time":"11:00-12:00","subject":"IDS","class":"II-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"IDS","class":"II-II AI_DS-A","type":"theory"}]
     }
@@ -89,11 +188,11 @@ faculty_list = [
     "phone": "8500161110",
     "email": "kalyanibondub5@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"10:00-11:00","subject":"SPM","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"AI LAB","class":"II-II AI_DS-B","type":"lab"}],
+      "Monday": [{"time":"10:00-11:00","subject":"SPM","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"AI LAB","class":"II-II AI_DS-B","type":"lab"}],
       "Tuesday": [{"time":"11:00-12:00","subject":"SPM","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"DL_CO","class":"II-II AI_DS-B","type":"theory"}],
-      "Wednesday": [{"time":"9:00-11:00","subject":"ML LAB","class":"III-II IT","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
+      "Wednesday": [{"time":"9:00-12:00","subject":"ML LAB","class":"III-II IT","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
       "Thursday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"SPM","class":"III-II IT","type":"theory"}],
-      "Friday": [{"time":"9:00-10:00","subject":"SPM","class":"III-II IT","type":"theory"},{"time":"11:00-12:00","subject":"DL_CO","class":"II-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-A","type":"lab"}],
+      "Friday": [{"time":"9:00-10:00","subject":"SPM","class":"III-II IT","type":"theory"},{"time":"11:00-12:00","subject":"DL_CO","class":"II-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-A","type":"lab"}],
       "Saturday": [{"time":"9:00-10:00","subject":"DL_CO","class":"II-II AI_DS-B","type":"theory"},{"time":"10:00-12:00","subject":"WORKSHOP","class":"III-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"DL_CO","class":"II-II AI_DS-B","type":"theory"}]
     }
   },
@@ -105,9 +204,9 @@ faculty_list = [
     "phone": "9490283780",
     "email": "siva_reddy93@yahoo.com, siva_reddy93@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"11:00-12:00","subject":"AI","class":"II-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"AI LAB","class":"II-II AI_DS-B","type":"lab"}],
-      "Tuesday": [{"time":"9:00-11:00","subject":"DTI LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"AI","class":"II-II AI_DS-B","type":"theory"}],
-      "Wednesday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"AI LAB","class":"II-II AI_DS-A","type":"lab"}],
+      "Monday": [{"time":"11:00-12:00","subject":"AI","class":"II-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"AI LAB","class":"II-II AI_DS-B","type":"lab"}],
+      "Tuesday": [{"time":"9:00-12:00","subject":"DTI LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"AI","class":"II-II AI_DS-B","type":"theory"}],
+      "Wednesday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"AI LAB","class":"II-II AI_DS-A","type":"lab"}],
       "Thursday": [{"time":"9:00-12:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
       "Friday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"3:00-4:00","subject":"TPW.IPR","class":"III-II IT","type":"theory"}],
       "Saturday": [{"time":"10:00-11:00","subject":"AI","class":"II-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"TPW.IPR","class":"III-II IT","type":"theory"}]
@@ -121,10 +220,10 @@ faculty_list = [
     "phone": "9491240473 / 9182272833",
     "email": "chiranjeevisv@gmail.com, chiranjeevisv@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"9:00-11:00","subject":"DTI LAB","class":"II-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"DL_CO","class":"II-II AI_DS-A","type":"theory"}],
-      "Tuesday": [{"time":"10:00-11:00","subject":"ML","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"BD and DV LAB","class":"III-II AI_DS-A","type":"lab"}],
-      "Wednesday": [{"time":"9:00-11:00","subject":"ML LAB","class":"III-II IT","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"3:00-4:00","subject":"ML","class":"III-II IT","type":"theory"}],
-      "Thursday": [{"time":"10:00-11:00","subject":"ML","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-A","type":"lab"}],
+      "Monday": [{"time":"9:00-12:00","subject":"DTI LAB","class":"II-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"DL_CO","class":"II-II AI_DS-A","type":"theory"}],
+      "Tuesday": [{"time":"10:00-11:00","subject":"ML","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"BD and DV LAB","class":"III-II AI_DS-A","type":"lab"}],
+      "Wednesday": [{"time":"9:00-12:00","subject":"ML LAB","class":"III-II IT","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"3:00-4:00","subject":"ML","class":"III-II IT","type":"theory"}],
+      "Thursday": [{"time":"10:00-11:00","subject":"ML","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-A","type":"lab"}],
       "Friday": [{"time":"9:00-10:00","subject":"DL_CO","class":"II-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"ML","class":"III-II IT","type":"theory"}],
       "Saturday": [{"time":"10:00-11:00","subject":"DL_CO","class":"II-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"DL_CO","class":"II-II AI_DS-A","type":"theory"}]
     }
@@ -137,9 +236,9 @@ faculty_list = [
     "phone": "9392320320 / 6281884050",
     "email": "prasanthsvcn@gmail.com, prasanth_p@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"9:00-11:00","subject":"PROJECT","class":"IV-II IT","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"BDA","class":"III-II AI_DS-A","type":"theory"}],
-      "Tuesday": [{"time":"9:00-11:00","subject":"BD and DV LAB","class":"III-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"BD and DV LAB","class":"III-II AI_DS-A","type":"lab"}],
-      "Wednesday": [{"time":"9:00-10:00","subject":"BDA","class":"III-II AI_DS-A","type":"theory"},{"time":"11:00-12:00","subject":"BDA","class":"III-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"DL LAB","class":"III-II AI_DS-B","type":"lab"}],
+      "Monday": [{"time":"9:00-12:00","subject":"PROJECT","class":"IV-II IT","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"BDA","class":"III-II AI_DS-A","type":"theory"}],
+      "Tuesday": [{"time":"9:00-12:00","subject":"BD and DV LAB","class":"III-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"BD and DV LAB","class":"III-II AI_DS-A","type":"lab"}],
+      "Wednesday": [{"time":"9:00-10:00","subject":"BDA","class":"III-II AI_DS-A","type":"theory"},{"time":"11:00-12:00","subject":"BDA","class":"III-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"DL LAB","class":"III-II AI_DS-B","type":"lab"}],
       "Thursday": [{"time":"9:00-10:00","subject":"BDA","class":"III-II AI_DS-B","type":"theory"},{"time":"11:00-12:00","subject":"BDA","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"BDA","class":"III-II AI_DS-B","type":"theory"}],
       "Friday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"2:00-3:00","subject":"BDA","class":"III-II AI_DS-A","type":"theory"}],
       "Saturday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}]
@@ -153,9 +252,9 @@ faculty_list = [
     "phone": "8340932859",
     "email": "venkatesh@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"9:00-11:00","subject":"PROJECT","class":"IV-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"NLP","class":"III-II AI_DS-B","type":"theory"}],
-      "Tuesday": [{"time":"10:00-11:00","subject":"NLP","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"BD and DV LAB","class":"III-II AI_DS-A","type":"lab"}],
-      "Wednesday": [{"time":"9:00-10:00","subject":"NLP","class":"III-II AI_DS-B","type":"theory"},{"time":"11:00-12:00","subject":"NLP","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"AI LAB","class":"II-II AI_DS-A","type":"lab"}],
+      "Monday": [{"time":"9:00-12:00","subject":"PROJECT","class":"IV-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"NLP","class":"III-II AI_DS-B","type":"theory"}],
+      "Tuesday": [{"time":"10:00-11:00","subject":"NLP","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"BD and DV LAB","class":"III-II AI_DS-A","type":"lab"}],
+      "Wednesday": [{"time":"9:00-10:00","subject":"NLP","class":"III-II AI_DS-B","type":"theory"},{"time":"11:00-12:00","subject":"NLP","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"AI LAB","class":"II-II AI_DS-A","type":"lab"}],
       "Thursday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"NLP","class":"III-II AI_DS-A","type":"theory"},{"time":"3:00-4:00","subject":"NLP","class":"III-II AI_DS-B","type":"theory"}],
       "Friday": [{"time":"9:00-10:00","subject":"NLP","class":"III-II AI_DS-A","type":"theory"},{"time":"11:00-12:00","subject":"NLP","class":"III-II AI_DS-B","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
       "Saturday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"Tutorial","class":"I-II AI_DS-A","type":"tutorial"}]
@@ -170,10 +269,10 @@ faculty_list = [
     "email": "chandrakala@nbkrist.org",
     "timetable": {
       "Monday": [{"time":"9:00-10:00","subject":"DL","class":"III-II AI_DS-B","type":"theory"},{"time":"11:00-12:00","subject":"CS_","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"3:00-4:00","subject":"DL","class":"III-II AI_DS-B","type":"theory"}],
-      "Tuesday": [{"time":"9:00-11:00","subject":"BD and DV LAB","class":"III-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"DL","class":"III-II AI_DS-B","type":"theory"},{"time":"3:00-4:00","subject":"CS_","class":"III-II IT","type":"theory"}],
-      "Wednesday": [{"time":"9:00-11:00","subject":"IDS LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"DL LAB","class":"III-II AI_DS-B","type":"lab"}],
+      "Tuesday": [{"time":"9:00-12:00","subject":"BD and DV LAB","class":"III-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-2:00","subject":"DL","class":"III-II AI_DS-B","type":"theory"},{"time":"3:00-4:00","subject":"CS_","class":"III-II IT","type":"theory"}],
+      "Wednesday": [{"time":"9:00-12:00","subject":"IDS LAB","class":"II-II AI_DS-B","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"DL LAB","class":"III-II AI_DS-B","type":"lab"}],
       "Thursday": [{"time":"9:00-10:00","subject":"CS_","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
-      "Friday": [{"time":"9:00-10:00","subject":"DL","class":"III-II AI_DS-B","type":"theory"},{"time":"11:00-12:00","subject":"CS_","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-B","type":"lab"}],
+      "Friday": [{"time":"9:00-10:00","subject":"DL","class":"III-II AI_DS-B","type":"theory"},{"time":"11:00-12:00","subject":"CS_","class":"III-II IT","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"FULL STACK DEVELOPMENT LAB","class":"II-II AI_DS-B","type":"lab"}],
       "Saturday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}]
     }
   },
@@ -201,8 +300,8 @@ faculty_list = [
     "phone": "9440767402 / 8297881509",
     "email": "pittijyothi91@gmail.com, pjyothi91@nbkrist.org",
     "timetable": {
-      "Monday": [{"time":"9:00-11:00","subject":"DL LAB","class":"III-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"3:00-4:00","subject":"DL","class":"III-II AI_DS-A","type":"theory"}],
-      "Tuesday": [{"time":"11:00-12:00","subject":"DL","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-3:00","subject":"IDS LAB","class":"II-II AI_DS-A","type":"lab"}],
+      "Monday": [{"time":"9:00-12:00","subject":"DL LAB","class":"III-II AI_DS-A","type":"lab"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"3:00-4:00","subject":"DL","class":"III-II AI_DS-A","type":"theory"}],
+      "Tuesday": [{"time":"11:00-12:00","subject":"DL","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"1:00-4:00","subject":"IDS LAB","class":"II-II AI_DS-A","type":"lab"}],
       "Wednesday": [{"time":"10:00-11:00","subject":"DL","class":"III-II AI_DS-A","type":"theory"},{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"},{"time":"3:00-4:00","subject":"DL","class":"III-II AI_DS-A","type":"theory"}],
       "Thursday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
       "Friday": [{"time":"12:00-1:00","subject":"LUNCH","class":None,"type":"break"}],
@@ -211,10 +310,23 @@ faculty_list = [
   }
 ]
 
-with open('aids_faculty_data.json', 'w', encoding='utf-8') as f:
-    json.dump(faculty_list, f, indent=2, ensure_ascii=False)
-
-print(f'Done. Written {len(faculty_list)} faculty records.')
+# ─────────────────────────────────────────────────────────────────────────────
+# Convert every faculty record to flat-dict format and write aids_faculty_data.json
+# ─────────────────────────────────────────────────────────────────────────────
+output = []
 for fac in faculty_list:
-    days = len([d for d,slots in fac['timetable'].items() if any(s['type']!='break' for s in slots)])
-    print(f"  {fac['name']:35s} | {fac['designation']:25s} | {days} active days")
+    record = {k: v for k, v in fac.items() if k != "timetable"}
+    record["timetable"] = to_flat_timetable(fac["timetable"])
+    output.append(record)
+
+with open('aids_faculty_data.json', 'w', encoding='utf-8') as f:
+    json.dump(output, f, indent=2, ensure_ascii=False)
+
+print(f'Done. Written {len(output)} faculty records to aids_faculty_data.json')
+for fac in output:
+    days_active = sum(
+        1 for day_data in fac["timetable"].values()
+        if any(v.strip() not in {"", "L", "U", "N", "C", "H", "BREAK", "LUNCH"}
+               for v in day_data.values())
+    )
+    print(f"  {fac['name']:35s} | {fac['designation']:25s} | {days_active} active days")

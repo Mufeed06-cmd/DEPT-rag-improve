@@ -112,5 +112,11 @@
     "query": "\"What are the bus fees?\"",
     "classified_module": "bus_fee",
     "top_score": 0.527
+  },
+  {
+    "timestamp": "2026-07-03T15:22:13.607780",
+    "query": "nataraj timetable",
+    "classified_module": "timetable",
+    "top_score": 0.0
   }
 ]

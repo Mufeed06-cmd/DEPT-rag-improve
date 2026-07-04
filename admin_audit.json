@@ -395,5 +395,25 @@
     "ts": "2026-06-29T15:37:33.569203",
     "user": "admin",
     "action": "FACULTY_DELETE:dd"
+  },
+  {
+    "ts": "2026-07-03T15:23:28.316618",
+    "user": "admin",
+    "action": "LOGIN"
+  },
+  {
+    "ts": "2026-07-03T15:47:04.341747",
+    "user": "admin",
+    "action": "LOGIN"
+  },
+  {
+    "ts": "2026-07-03T15:50:20.001773",
+    "user": "admin",
+    "action": "LOGIN"
+  },
+  {
+    "ts": "2026-07-03T15:50:22.379931",
+    "user": "admin",
+    "action": "LOGIN"
   }
 ]

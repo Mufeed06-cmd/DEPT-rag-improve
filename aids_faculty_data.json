@@ -18,7 +18,7 @@
         "4:00-5:00": ""
       },
       "Tue": {
-        "9:00-10:00": "",
+        "9:00-10:00": "BD and DV LAB (III-II AI_DS-B)",
         "10:00-11:00": "BD and DV LAB (III-II AI_DS-B)",
         "11:00-12:00": "BD and DV LAB (III-II AI_DS-B)",
         "12:00-1:00": "U",
@@ -30,7 +30,7 @@
       "Wed": {
         "9:00-10:00": "",
         "10:00-11:00": "",
-        "11:00-12:00": "AI II-II AI_DS-A",
+        "11:00-12:00": "AI (II-II AI_DS-A)",
         "12:00-1:00": "N",
         "1:00-2:00": "AI LAB (II-II AI_DS-A)",
         "2:00-3:00": "AI LAB (II-II AI_DS-A)",
@@ -38,9 +38,9 @@
         "4:00-5:00": ""
       },
       "Thu": {
-        "9:00-10:00": "",
-        "10:00-11:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-A)",
-        "11:00-12:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-A)",
+        "9:00-10:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-A)",
+        "10:00-11:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-A)",
+        "11:00-12:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-A)",
         "12:00-1:00": "C",
         "1:00-2:00": "",
         "2:00-3:00": "",
@@ -49,18 +49,18 @@
       },
       "Fri": {
         "9:00-10:00": "",
-        "10:00-11:00": "AI II-II AI_DS-A",
-        "11:00-12:00": "",
+        "10:00-11:00": "",
+        "11:00-12:00": "AI (II-II AI_DS-A)",
         "12:00-1:00": "H",
         "1:00-2:00": "",
         "2:00-3:00": "",
-        "3:00-4:00": "TPW.IPR III-II AI_DS-A",
+        "3:00-4:00": "TPW.IPR (III-II AI_DS-A)",
         "4:00-5:00": ""
       },
       "Sat": {
-        "9:00-10:00": "TPW.IPR III-II AI_DS-A",
+        "9:00-10:00": "TPW.IPR (III-II AI_DS-A)",
         "10:00-11:00": "",
-        "11:00-12:00": "AI II-II AI_DS-A",
+        "11:00-12:00": "AI (II-II AI_DS-A)",
         "12:00-1:00": "BREAK",
         "1:00-2:00": "",
         "2:00-3:00": "",
@@ -80,7 +80,7 @@
       "Mon": {
         "9:00-10:00": "",
         "10:00-11:00": "",
-        "11:00-12:00": "SNA III-II AI_DS-B",
+        "11:00-12:00": "SNA (III-II AI_DS-B)",
         "12:00-1:00": "L",
         "1:00-2:00": "CNS LAB (III-II IT)",
         "2:00-3:00": "CNS LAB (III-II IT)",
@@ -88,41 +88,41 @@
         "4:00-5:00": ""
       },
       "Tue": {
-        "9:00-10:00": "SNA III-II AI_DS-A",
+        "9:00-10:00": "SNA (III-II AI_DS-A)",
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "U",
         "1:00-2:00": "IDS LAB (II-II AI_DS-A)",
         "2:00-3:00": "IDS LAB (II-II AI_DS-A)",
-        "3:00-4:00": "SNA III-II AI_DS-B",
+        "3:00-4:00": "SNA (III-II AI_DS-B)",
         "4:00-5:00": ""
       },
       "Wed": {
-        "9:00-10:00": "",
+        "9:00-10:00": "IDS LAB (II-II AI_DS-B)",
         "10:00-11:00": "IDS LAB (II-II AI_DS-B)",
         "11:00-12:00": "IDS LAB (II-II AI_DS-B)",
         "12:00-1:00": "N",
         "1:00-2:00": "",
-        "2:00-3:00": "SNA III-II AI_DS-A",
+        "2:00-3:00": "SNA (III-II AI_DS-A)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Thu": {
         "9:00-10:00": "",
-        "10:00-11:00": "SNA III-II AI_DS-A",
+        "10:00-11:00": "SNA (III-II AI_DS-A)",
         "11:00-12:00": "",
         "12:00-1:00": "C",
-        "1:00-2:00": "SNA III-II AI_DS-B",
+        "1:00-2:00": "SNA (III-II AI_DS-B)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Fri": {
         "9:00-10:00": "",
-        "10:00-11:00": "SNA III-II AI_DS-B",
+        "10:00-11:00": "SNA (III-II AI_DS-B)",
         "11:00-12:00": "",
         "12:00-1:00": "H",
-        "1:00-2:00": "SNA III-II AI_DS-A",
+        "1:00-2:00": "SNA (III-II AI_DS-A)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
@@ -148,7 +148,7 @@
     "email": "veera_raghavulu@rediff.com, veera_raghavulu@nbkrist.org",
     "timetable": {
       "Mon": {
-        "9:00-10:00": "",
+        "9:00-10:00": "DL LAB (III-II AI_DS-A)",
         "10:00-11:00": "DL LAB (III-II AI_DS-A)",
         "11:00-12:00": "DL LAB (III-II AI_DS-A)",
         "12:00-1:00": "L",
@@ -158,12 +158,12 @@
         "4:00-5:00": ""
       },
       "Tue": {
-        "9:00-10:00": "",
+        "9:00-10:00": "DTI LAB (II-II AI_DS-B)",
         "10:00-11:00": "DTI LAB (II-II AI_DS-B)",
         "11:00-12:00": "DTI LAB (II-II AI_DS-B)",
         "12:00-1:00": "U",
         "1:00-2:00": "",
-        "2:00-3:00": "CNS III-II IT",
+        "2:00-3:00": "CNS (III-II IT)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
@@ -173,7 +173,7 @@
         "11:00-12:00": "",
         "12:00-1:00": "N",
         "1:00-2:00": "",
-        "2:00-3:00": "CNS III-II IT",
+        "2:00-3:00": "CNS (III-II IT)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
@@ -184,21 +184,21 @@
         "12:00-1:00": "C",
         "1:00-2:00": "",
         "2:00-3:00": "",
-        "3:00-4:00": "CNS III-II IT",
+        "3:00-4:00": "CNS (III-II IT)",
         "4:00-5:00": ""
       },
       "Fri": {
         "9:00-10:00": "",
-        "10:00-11:00": "CNS III-II IT",
+        "10:00-11:00": "CNS (III-II IT)",
         "11:00-12:00": "",
         "12:00-1:00": "H",
-        "1:00-2:00": "TPW.IPR III-II AI_DS-B",
+        "1:00-2:00": "TPW.IPR (III-II AI_DS-B)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Sat": {
-        "9:00-10:00": "TPW.IPR III-II AI_DS-B",
+        "9:00-10:00": "TPW.IPR (III-II AI_DS-B)",
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "BREAK",
@@ -218,28 +218,28 @@
     "email": "mahendraniyogi@gmail.com, mahendrasharma@nbkrist.org",
     "timetable": {
       "Mon": {
-        "9:00-10:00": "",
+        "9:00-10:00": "DTI LAB (II-II AI_DS-A)",
         "10:00-11:00": "DTI LAB (II-II AI_DS-A)",
         "11:00-12:00": "DTI LAB (II-II AI_DS-A)",
         "12:00-1:00": "L",
-        "1:00-2:00": "AIF III-II AI_DS-A",
+        "1:00-2:00": "AIF (III-II AI_DS-A)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Tue": {
-        "9:00-10:00": "",
+        "9:00-10:00": "DTI LAB (II-II AI_DS-B)",
         "10:00-11:00": "DTI LAB (II-II AI_DS-B)",
         "11:00-12:00": "DTI LAB (II-II AI_DS-B)",
         "12:00-1:00": "U",
         "1:00-2:00": "",
-        "2:00-3:00": "AIF III-II AI_DS-B",
+        "2:00-3:00": "AIF (III-II AI_DS-B)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Wed": {
         "9:00-10:00": "",
-        "10:00-11:00": "AIF III-II AI_DS-B",
+        "10:00-11:00": "AIF (III-II AI_DS-B)",
         "11:00-12:00": "",
         "12:00-1:00": "N",
         "1:00-2:00": "DL LAB (III-II AI_DS-B)",
@@ -248,22 +248,22 @@
         "4:00-5:00": ""
       },
       "Thu": {
-        "9:00-10:00": "AIF III-II AI_DS-A",
+        "9:00-10:00": "AIF (III-II AI_DS-A)",
         "10:00-11:00": "",
-        "11:00-12:00": "AIF III-II AI_DS-B",
+        "11:00-12:00": "AIF (III-II AI_DS-B)",
         "12:00-1:00": "C",
         "1:00-2:00": "",
-        "2:00-3:00": "AIF III-II AI_DS-A",
+        "2:00-3:00": "AIF (III-II AI_DS-A)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Fri": {
         "9:00-10:00": "",
-        "10:00-11:00": "AIF III-II AI_DS-A",
+        "10:00-11:00": "AIF (III-II AI_DS-A)",
         "11:00-12:00": "",
         "12:00-1:00": "H",
         "1:00-2:00": "",
-        "2:00-3:00": "AIF III-II AI_DS-B",
+        "2:00-3:00": "AIF (III-II AI_DS-B)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
@@ -288,10 +288,10 @@
     "email": "mamatha.sekireddy@gmail.com, mamatha45@nbkrist.org",
     "timetable": {
       "Mon": {
-        "9:00-10:00": "",
+        "9:00-10:00": "PROJECT (IV-II AI_DS-B)",
         "10:00-11:00": "PROJECT (IV-II AI_DS-B)",
         "11:00-12:00": "PROJECT (IV-II AI_DS-B)",
-        "12:00-1:00": "IDS II-II AI_DS-A",
+        "12:00-1:00": "L",
         "1:00-2:00": "",
         "2:00-3:00": "",
         "3:00-4:00": "",
@@ -299,7 +299,7 @@
       },
       "Tue": {
         "9:00-10:00": "",
-        "10:00-11:00": "IDS II-II AI_DS-A",
+        "10:00-11:00": "IDS (II-II AI_DS-A)",
         "11:00-12:00": "",
         "12:00-1:00": "U",
         "1:00-2:00": "IDS LAB (II-II AI_DS-A)",
@@ -308,12 +308,12 @@
         "4:00-5:00": ""
       },
       "Wed": {
-        "9:00-10:00": "",
+        "9:00-10:00": "IDS LAB (II-II AI_DS-B)",
         "10:00-11:00": "IDS LAB (II-II AI_DS-B)",
         "11:00-12:00": "IDS LAB (II-II AI_DS-B)",
         "12:00-1:00": "N",
         "1:00-2:00": "",
-        "2:00-3:00": "IDS II-II AI_DS-B",
+        "2:00-3:00": "IDS (II-II AI_DS-B)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
@@ -322,14 +322,14 @@
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "C",
-        "1:00-2:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-B)",
-        "2:00-3:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-B)",
-        "3:00-4:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-B)",
+        "1:00-2:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-B)",
+        "2:00-3:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-B)",
+        "3:00-4:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-B)",
         "4:00-5:00": ""
       },
       "Fri": {
         "9:00-10:00": "",
-        "10:00-11:00": "IDS II-II AI_DS-B",
+        "10:00-11:00": "IDS (II-II AI_DS-B)",
         "11:00-12:00": "",
         "12:00-1:00": "H",
         "1:00-2:00": "",
@@ -340,10 +340,10 @@
       "Sat": {
         "9:00-10:00": "",
         "10:00-11:00": "",
-        "11:00-12:00": "IDS II-II AI_DS-B",
+        "11:00-12:00": "IDS (II-II AI_DS-B)",
         "12:00-1:00": "BREAK",
         "1:00-2:00": "",
-        "2:00-3:00": "IDS II-II AI_DS-A",
+        "2:00-3:00": "IDS (II-II AI_DS-A)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       }
@@ -359,7 +359,7 @@
     "timetable": {
       "Mon": {
         "9:00-10:00": "",
-        "10:00-11:00": "SPM III-II IT",
+        "10:00-11:00": "SPM (III-II IT)",
         "11:00-12:00": "",
         "12:00-1:00": "L",
         "1:00-2:00": "AI LAB (II-II AI_DS-B)",
@@ -370,15 +370,15 @@
       "Tue": {
         "9:00-10:00": "",
         "10:00-11:00": "",
-        "11:00-12:00": "SPM III-II IT",
+        "11:00-12:00": "SPM (III-II IT)",
         "12:00-1:00": "U",
-        "1:00-2:00": "DL_CO II-II AI_DS-B",
+        "1:00-2:00": "DL_CO (II-II AI_DS-B)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Wed": {
-        "9:00-10:00": "",
+        "9:00-10:00": "ML LAB (III-II IT)",
         "10:00-11:00": "ML LAB (III-II IT)",
         "11:00-12:00": "ML LAB (III-II IT)",
         "12:00-1:00": "N",
@@ -393,27 +393,27 @@
         "11:00-12:00": "",
         "12:00-1:00": "C",
         "1:00-2:00": "",
-        "2:00-3:00": "SPM III-II IT",
+        "2:00-3:00": "SPM (III-II IT)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Fri": {
-        "9:00-10:00": "SPM III-II IT",
+        "9:00-10:00": "SPM (III-II IT)",
         "10:00-11:00": "",
-        "11:00-12:00": "DL_CO II-II AI_DS-B",
+        "11:00-12:00": "DL_CO (II-II AI_DS-B)",
         "12:00-1:00": "H",
-        "1:00-2:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-A)",
-        "2:00-3:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-A)",
-        "3:00-4:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-A)",
+        "1:00-2:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-A)",
+        "2:00-3:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-A)",
+        "3:00-4:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-A)",
         "4:00-5:00": ""
       },
       "Sat": {
-        "9:00-10:00": "DL_CO II-II AI_DS-B",
+        "9:00-10:00": "DL_CO (II-II AI_DS-B)",
         "10:00-11:00": "WORKSHOP (III-II AI_DS-B)",
         "11:00-12:00": "WORKSHOP (III-II AI_DS-B)",
         "12:00-1:00": "BREAK",
         "1:00-2:00": "",
-        "2:00-3:00": "DL_CO II-II AI_DS-B",
+        "2:00-3:00": "DL_CO (II-II AI_DS-B)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       }
@@ -430,7 +430,7 @@
       "Mon": {
         "9:00-10:00": "",
         "10:00-11:00": "",
-        "11:00-12:00": "AI II-II AI_DS-B",
+        "11:00-12:00": "AI (II-II AI_DS-B)",
         "12:00-1:00": "L",
         "1:00-2:00": "AI LAB (II-II AI_DS-B)",
         "2:00-3:00": "AI LAB (II-II AI_DS-B)",
@@ -438,12 +438,12 @@
         "4:00-5:00": ""
       },
       "Tue": {
-        "9:00-10:00": "",
+        "9:00-10:00": "DTI LAB (II-II AI_DS-B)",
         "10:00-11:00": "DTI LAB (II-II AI_DS-B)",
         "11:00-12:00": "DTI LAB (II-II AI_DS-B)",
         "12:00-1:00": "U",
         "1:00-2:00": "",
-        "2:00-3:00": "AI II-II AI_DS-B",
+        "2:00-3:00": "AI (II-II AI_DS-B)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
@@ -458,9 +458,9 @@
         "4:00-5:00": ""
       },
       "Thu": {
-        "9:00-10:00": "",
-        "10:00-11:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-B)",
-        "11:00-12:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-B)",
+        "9:00-10:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-B)",
+        "10:00-11:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-B)",
+        "11:00-12:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-B)",
         "12:00-1:00": "C",
         "1:00-2:00": "",
         "2:00-3:00": "",
@@ -474,15 +474,15 @@
         "12:00-1:00": "H",
         "1:00-2:00": "",
         "2:00-3:00": "",
-        "3:00-4:00": "TPW.IPR III-II IT",
+        "3:00-4:00": "TPW.IPR (III-II IT)",
         "4:00-5:00": ""
       },
       "Sat": {
         "9:00-10:00": "",
-        "10:00-11:00": "AI II-II AI_DS-B",
+        "10:00-11:00": "AI (II-II AI_DS-B)",
         "11:00-12:00": "",
         "12:00-1:00": "BREAK",
-        "1:00-2:00": "TPW.IPR III-II IT",
+        "1:00-2:00": "TPW.IPR (III-II IT)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
@@ -498,18 +498,18 @@
     "email": "chiranjeevisv@gmail.com, chiranjeevisv@nbkrist.org",
     "timetable": {
       "Mon": {
-        "9:00-10:00": "",
+        "9:00-10:00": "DTI LAB (II-II AI_DS-A)",
         "10:00-11:00": "DTI LAB (II-II AI_DS-A)",
         "11:00-12:00": "DTI LAB (II-II AI_DS-A)",
         "12:00-1:00": "L",
-        "1:00-2:00": "DL_CO II-II AI_DS-A",
+        "1:00-2:00": "DL_CO (II-II AI_DS-A)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Tue": {
         "9:00-10:00": "",
-        "10:00-11:00": "ML III-II IT",
+        "10:00-11:00": "ML (III-II IT)",
         "11:00-12:00": "",
         "12:00-1:00": "U",
         "1:00-2:00": "BD and DV LAB (III-II AI_DS-A)",
@@ -518,41 +518,41 @@
         "4:00-5:00": ""
       },
       "Wed": {
-        "9:00-10:00": "",
+        "9:00-10:00": "ML LAB (III-II IT)",
         "10:00-11:00": "ML LAB (III-II IT)",
         "11:00-12:00": "ML LAB (III-II IT)",
         "12:00-1:00": "N",
         "1:00-2:00": "",
         "2:00-3:00": "",
-        "3:00-4:00": "ML III-II IT",
+        "3:00-4:00": "ML (III-II IT)",
         "4:00-5:00": ""
       },
       "Thu": {
         "9:00-10:00": "",
-        "10:00-11:00": "ML III-II IT",
+        "10:00-11:00": "ML (III-II IT)",
         "11:00-12:00": "",
         "12:00-1:00": "C",
-        "1:00-2:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-A)",
-        "2:00-3:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-A)",
-        "3:00-4:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-A)",
+        "1:00-2:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-A)",
+        "2:00-3:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-A)",
+        "3:00-4:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-A)",
         "4:00-5:00": ""
       },
       "Fri": {
-        "9:00-10:00": "DL_CO II-II AI_DS-A",
+        "9:00-10:00": "DL_CO (II-II AI_DS-A)",
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "H",
-        "1:00-2:00": "ML III-II IT",
+        "1:00-2:00": "ML (III-II IT)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Sat": {
         "9:00-10:00": "",
-        "10:00-11:00": "DL_CO II-II AI_DS-A",
+        "10:00-11:00": "DL_CO (II-II AI_DS-A)",
         "11:00-12:00": "",
         "12:00-1:00": "BREAK",
-        "1:00-2:00": "DL_CO II-II AI_DS-A",
+        "1:00-2:00": "DL_CO (II-II AI_DS-A)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
@@ -568,42 +568,42 @@
     "email": "prasanthsvcn@gmail.com, prasanth_p@nbkrist.org",
     "timetable": {
       "Mon": {
-        "9:00-10:00": "",
+        "9:00-10:00": "PROJECT (IV-II IT)",
         "10:00-11:00": "PROJECT (IV-II IT)",
         "11:00-12:00": "PROJECT (IV-II IT)",
         "12:00-1:00": "L",
         "1:00-2:00": "",
-        "2:00-3:00": "BDA III-II AI_DS-A",
+        "2:00-3:00": "BDA (III-II AI_DS-A)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Tue": {
-        "9:00-10:00": "",
+        "9:00-10:00": "BD and DV LAB (III-II AI_DS-B)",
         "10:00-11:00": "BD and DV LAB (III-II AI_DS-B)",
         "11:00-12:00": "BD and DV LAB (III-II AI_DS-B)",
         "12:00-1:00": "U",
         "1:00-2:00": "BD and DV LAB (III-II AI_DS-A)",
         "2:00-3:00": "BD and DV LAB (III-II AI_DS-A)",
-        "3:00-4:00": "DL LAB (III-II AI_DS-B)",
+        "3:00-4:00": "",
         "4:00-5:00": ""
       },
       "Wed": {
-        "9:00-10:00": "BDA III-II AI_DS-A",
+        "9:00-10:00": "BDA (III-II AI_DS-A)",
         "10:00-11:00": "",
-        "11:00-12:00": "BDA III-II AI_DS-B",
+        "11:00-12:00": "BDA (III-II AI_DS-B)",
         "12:00-1:00": "N",
-        "1:00-2:00": "",
+        "1:00-2:00": "DL LAB (III-II AI_DS-B)",
         "2:00-3:00": "DL LAB (III-II AI_DS-B)",
         "3:00-4:00": "DL LAB (III-II AI_DS-B)",
         "4:00-5:00": ""
       },
       "Thu": {
-        "9:00-10:00": "BDA III-II AI_DS-B",
+        "9:00-10:00": "BDA (III-II AI_DS-B)",
         "10:00-11:00": "",
-        "11:00-12:00": "BDA III-II AI_DS-A",
+        "11:00-12:00": "BDA (III-II AI_DS-A)",
         "12:00-1:00": "C",
         "1:00-2:00": "",
-        "2:00-3:00": "BDA III-II AI_DS-B",
+        "2:00-3:00": "BDA (III-II AI_DS-B)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
@@ -613,7 +613,7 @@
         "11:00-12:00": "",
         "12:00-1:00": "H",
         "1:00-2:00": "",
-        "2:00-3:00": "BDA III-II AI_DS-A",
+        "2:00-3:00": "BDA (III-II AI_DS-A)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
@@ -638,10 +638,10 @@
     "email": "venkatesh@nbkrist.org",
     "timetable": {
       "Mon": {
-        "9:00-10:00": "",
+        "9:00-10:00": "PROJECT (IV-II AI_DS-A)",
         "10:00-11:00": "PROJECT (IV-II AI_DS-A)",
         "11:00-12:00": "PROJECT (IV-II AI_DS-A)",
-        "12:00-1:00": "NLP III-II AI_DS-B",
+        "12:00-1:00": "L",
         "1:00-2:00": "",
         "2:00-3:00": "",
         "3:00-4:00": "",
@@ -649,8 +649,8 @@
       },
       "Tue": {
         "9:00-10:00": "",
-        "10:00-11:00": "NLP III-II AI_DS-A",
-        "11:00-12:00": "NLP III-II AI_DS-A",
+        "10:00-11:00": "NLP (III-II AI_DS-A)",
+        "11:00-12:00": "",
         "12:00-1:00": "U",
         "1:00-2:00": "BD and DV LAB (III-II AI_DS-A)",
         "2:00-3:00": "BD and DV LAB (III-II AI_DS-A)",
@@ -658,9 +658,9 @@
         "4:00-5:00": ""
       },
       "Wed": {
-        "9:00-10:00": "NLP III-II AI_DS-B",
+        "9:00-10:00": "NLP (III-II AI_DS-B)",
         "10:00-11:00": "",
-        "11:00-12:00": "NLP III-II AI_DS-A",
+        "11:00-12:00": "NLP (III-II AI_DS-A)",
         "12:00-1:00": "N",
         "1:00-2:00": "AI LAB (II-II AI_DS-A)",
         "2:00-3:00": "AI LAB (II-II AI_DS-A)",
@@ -672,15 +672,15 @@
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "C",
-        "1:00-2:00": "NLP III-II AI_DS-A",
+        "1:00-2:00": "NLP (III-II AI_DS-A)",
         "2:00-3:00": "",
-        "3:00-4:00": "NLP III-II AI_DS-B",
+        "3:00-4:00": "NLP (III-II AI_DS-B)",
         "4:00-5:00": ""
       },
       "Fri": {
-        "9:00-10:00": "NLP III-II AI_DS-A",
+        "9:00-10:00": "NLP (III-II AI_DS-A)",
         "10:00-11:00": "",
-        "11:00-12:00": "NLP III-II AI_DS-B",
+        "11:00-12:00": "NLP (III-II AI_DS-B)",
         "12:00-1:00": "H",
         "1:00-2:00": "",
         "2:00-3:00": "",
@@ -692,8 +692,8 @@
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "BREAK",
-        "1:00-2:00": "Tutorial I-II AI_DS-A",
-        "2:00-3:00": "Tutorial I-II AI_DS-A",
+        "1:00-2:00": "Tutorial (I-II AI_DS-A)",
+        "2:00-3:00": "Tutorial (I-II AI_DS-A)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       }
@@ -708,27 +708,27 @@
     "email": "chandrakala@nbkrist.org",
     "timetable": {
       "Mon": {
-        "9:00-10:00": "DL III-II AI_DS-B",
+        "9:00-10:00": "DL (III-II AI_DS-B)",
         "10:00-11:00": "",
-        "11:00-12:00": "CS_ III-II IT",
+        "11:00-12:00": "CS_ (III-II IT)",
         "12:00-1:00": "L",
         "1:00-2:00": "",
         "2:00-3:00": "",
-        "3:00-4:00": "DL III-II AI_DS-B",
+        "3:00-4:00": "DL (III-II AI_DS-B)",
         "4:00-5:00": ""
       },
       "Tue": {
-        "9:00-10:00": "",
+        "9:00-10:00": "BD and DV LAB (III-II AI_DS-B)",
         "10:00-11:00": "BD and DV LAB (III-II AI_DS-B)",
         "11:00-12:00": "BD and DV LAB (III-II AI_DS-B)",
         "12:00-1:00": "U",
-        "1:00-2:00": "DL III-II AI_DS-B",
+        "1:00-2:00": "DL (III-II AI_DS-B)",
         "2:00-3:00": "",
-        "3:00-4:00": "CS_ III-II IT",
+        "3:00-4:00": "CS_ (III-II IT)",
         "4:00-5:00": ""
       },
       "Wed": {
-        "9:00-10:00": "",
+        "9:00-10:00": "IDS LAB (II-II AI_DS-B)",
         "10:00-11:00": "IDS LAB (II-II AI_DS-B)",
         "11:00-12:00": "IDS LAB (II-II AI_DS-B)",
         "12:00-1:00": "N",
@@ -738,7 +738,7 @@
         "4:00-5:00": ""
       },
       "Thu": {
-        "9:00-10:00": "CS_ III-II IT",
+        "9:00-10:00": "CS_ (III-II IT)",
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "C",
@@ -748,13 +748,13 @@
         "4:00-5:00": ""
       },
       "Fri": {
-        "9:00-10:00": "DL III-II AI_DS-B",
+        "9:00-10:00": "DL (III-II AI_DS-B)",
         "10:00-11:00": "",
-        "11:00-12:00": "CS_ III-II IT",
+        "11:00-12:00": "CS_ (III-II IT)",
         "12:00-1:00": "H",
-        "1:00-2:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-B)",
-        "2:00-3:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-B)",
-        "3:00-4:00": "FULL STACK DEVELOPEMENT LAB (II-II AI_DS-B)",
+        "1:00-2:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-B)",
+        "2:00-3:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-B)",
+        "3:00-4:00": "FULL STACK DEVELOPMENT LAB (II-II AI_DS-B)",
         "4:00-5:00": ""
       },
       "Sat": {
@@ -788,7 +788,7 @@
         "4:00-5:00": ""
       },
       "Tue": {
-        "9:00-10:00": "CdC III-II IT",
+        "9:00-10:00": "CdC (III-II IT)",
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "U",
@@ -802,7 +802,7 @@
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "N",
-        "1:00-2:00": "CdC III-II IT",
+        "1:00-2:00": "CdC (III-II IT)",
         "2:00-3:00": "",
         "3:00-4:00": "",
         "4:00-5:00": ""
@@ -810,11 +810,11 @@
       "Thu": {
         "9:00-10:00": "",
         "10:00-11:00": "",
-        "11:00-12:00": "CdC III-II IT",
+        "11:00-12:00": "CdC (III-II IT)",
         "12:00-1:00": "C",
         "1:00-2:00": "",
-        "2:00-3:00": "T I-II AI_DS-D",
-        "3:00-4:00": "T I-II AI_DS-D",
+        "2:00-3:00": "T (I-II AI_DS-D)",
+        "3:00-4:00": "T (I-II AI_DS-D)",
         "4:00-5:00": ""
       },
       "Fri": {
@@ -823,7 +823,7 @@
         "11:00-12:00": "",
         "12:00-1:00": "H",
         "1:00-2:00": "",
-        "2:00-3:00": "CdC III-II IT",
+        "2:00-3:00": "CdC (III-II IT)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       },
@@ -832,8 +832,8 @@
         "10:00-11:00": "",
         "11:00-12:00": "",
         "12:00-1:00": "BREAK",
-        "1:00-2:00": "T I-II AI_DS-C",
-        "2:00-3:00": "T I-II AI_DS-C",
+        "1:00-2:00": "T (I-II AI_DS-C)",
+        "2:00-3:00": "T (I-II AI_DS-C)",
         "3:00-4:00": "",
         "4:00-5:00": ""
       }
@@ -848,19 +848,19 @@
     "email": "pittijyothi91@gmail.com, pjyothi91@nbkrist.org",
     "timetable": {
       "Mon": {
-        "9:00-10:00": "",
+        "9:00-10:00": "DL LAB (III-II AI_DS-A)",
         "10:00-11:00": "DL LAB (III-II AI_DS-A)",
         "11:00-12:00": "DL LAB (III-II AI_DS-A)",
         "12:00-1:00": "L",
         "1:00-2:00": "",
         "2:00-3:00": "",
-        "3:00-4:00": "DL III-II AI_DS-A",
+        "3:00-4:00": "DL (III-II AI_DS-A)",
         "4:00-5:00": ""
       },
       "Tue": {
         "9:00-10:00": "",
         "10:00-11:00": "",
-        "11:00-12:00": "DL III-II AI_DS-A",
+        "11:00-12:00": "DL (III-II AI_DS-A)",
         "12:00-1:00": "U",
         "1:00-2:00": "IDS LAB (II-II AI_DS-A)",
         "2:00-3:00": "IDS LAB (II-II AI_DS-A)",
@@ -869,12 +869,12 @@
       },
       "Wed": {
         "9:00-10:00": "",
-        "10:00-11:00": "DL III-II AI_DS-A",
+        "10:00-11:00": "DL (III-II AI_DS-A)",
         "11:00-12:00": "",
         "12:00-1:00": "N",
         "1:00-2:00": "",
         "2:00-3:00": "",
-        "3:00-4:00": "DL III-II AI_DS-A",
+        "3:00-4:00": "DL (III-II AI_DS-A)",
         "4:00-5:00": ""
       },
       "Thu": {
@@ -898,13 +898,13 @@
         "4:00-5:00": ""
       },
       "Sat": {
-        "9:00-10:00": "",
+        "9:00-10:00": "WORKSHOP (III-II AI_DS-A)",
         "10:00-11:00": "WORKSHOP (III-II AI_DS-A)",
         "11:00-12:00": "WORKSHOP (III-II AI_DS-A)",
         "12:00-1:00": "BREAK",
         "1:00-2:00": "",
-        "2:00-3:00": "Tutorial I-II AI_DS-B",
-        "3:00-4:00": "Tutorial I-II AI_DS-B",
+        "2:00-3:00": "Tutorial (I-II AI_DS-B)",
+        "3:00-4:00": "Tutorial (I-II AI_DS-B)",
         "4:00-5:00": ""
       }
     }
