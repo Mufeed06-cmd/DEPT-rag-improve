@@ -3061,11 +3061,19 @@ def _help_card() -> str:
     return _info_card("💡 What I can help you with", rows)
 
 
+def _attendance_card() -> str:
+    return _info_card("Attendance", [
+        ("How to check", "To check attendance, please follow the given link below."),
+        ("Attendance link", '<a href="https://t.me/NbkristQik_bot" target="_blank" rel="noopener">https://t.me/NbkristQik_bot</a>'),
+    ])
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Query Preprocessor — typo correction, abbreviation expansion, alias normalise
 # ─────────────────────────────────────────────────────────────────────────────
 
 _TYPO_MAP = {
+    "attendence": "attendance", "attendece": "attendance",
     "artifical": "artificial", "artifcial": "artificial", "artiicial": "artificial",
     "intelligance": "intelligence", "intelligense": "intelligence",
     "machne": "machine", "machin": "machine", "mchine": "machine",
@@ -3317,6 +3325,9 @@ def get_response(query: str, conn_id: str = "default") -> str:
     # ── Preprocess: fix typos + expand abbreviations ──────────────────────
     expanded = preprocess_query(query)
 
+    if "attendance" in expanded:
+        return _attendance_card()
+
     qa     = analyse_query(expanded)
     intent = detect_intent(expanded, qa)
 
@@ -3396,6 +3407,12 @@ def get_response(query: str, conn_id: str = "default") -> str:
 
     if module == "college":
         return handle_college_query(expanded)
+
+    if module == "services":
+        if "attendance" in expanded:
+            return _attendance_card()
+        log_failed_query(query, "services", 0.0)
+        return "I couldn't find that information in the uploaded NBKRIST knowledge base."
 
     if module == "labs":
         labs_reply = handle_labs_query(expanded)
